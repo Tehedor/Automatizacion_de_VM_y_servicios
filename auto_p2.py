@@ -28,6 +28,7 @@ print('CDPS - mensaje info1')
 with open('auto_p2.json', 'r') as f:
     data = json.load(f)
 
+
 num_server = data['num_server']
 # debug = data['debug']
 
@@ -50,19 +51,19 @@ if second_arg == 'crear':
     # def crear_mv (self, imagen, interfaces_red, router):
     # Creacion de rotuer
     lb = MV("LB")
-    lb.arrancar_mv( imagen,['if1', 'if2'], True)
+    lb.crear_mv( imagen,['if1', 'if2'], True)
     ip_lb = ["192.1.1.1.1","192.0.0.0"]
     crear_fiche(lb,ip_lb,True)
     # Creacion de clinete
     c1 = MV("c1")
-    c1.arrancar_mv(imagen, ['if1'], False)
+    c1.crear_mv(imagen, ['if1'], False)
     ip_c1 = ["1234.134.132.41"]
     crear_fiche(c1,ip_c1,False)
     # Creación de Servidores
     num = "31"
     for num_server in range(1,num_server+1):
         name = "s" + num_server
-        mv.arrancar_mv(imagen, ['if1'] , False)
+        mv.crear_mv(imagen, ['if1'] , False)
         ip_mv = [f"10.11.2.{num}"]
         crear_fiche(mv,ip_mv,False)
         num = num + 1
