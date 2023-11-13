@@ -31,18 +31,17 @@ with open('auto_p2.json', 'r') as f:
 num_server = data['num_server']
 # debug = data['debug']
 
-
 if len(sys.argv) < 2:
     print("Error: No se proporcionó el segundo argumento.")
     sys.exit(1)
 
 second_arg = sys.argv[1]
 
-# mv = MV()
-# red = Red()
+
+
 
 if second_arg == 'crear':
-    imagen = "cdps-vm-base-pc1.qcow2"   
+    imagen = "./cdps-vm-base-pc1.qcow2"   
     if1 = Red("LAN1")
     if2 = Red("LAN2")
     if1.crear_red()
@@ -54,14 +53,13 @@ if second_arg == 'crear':
     lb.arrancar_mv( imagen,['if1', 'if2'], True)
     # Creacion de clinete
     c1 = MV("c1")
-    mv.arrancar_mv(imagen, 'if1', False)
+    mv.arrancar_mv(imagen, ['if1'], False)
     # Creación de Servidores
     for num_server in range(1,num_server+1):
         name = "s" + num_server
-        mv.arrancar_mv(imagen, 'if1' , False)
-    
+        mv.arrancar_mv(imagen, ['if1'] , False)
 elif second_arg == 'arrancar':
-    mv.crear_mv()
+    mv.arrancar_mv()
 
 elif second_arg == 'parar':
     mv.parar_mv()

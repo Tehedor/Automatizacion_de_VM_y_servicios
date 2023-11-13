@@ -40,7 +40,7 @@ class MV:
       devices.insert(index + 1, interface_2)
     else:
       source = devices.find('interface/source')
-      source.set('bridge', interfaces_red)
+      source.set('bridge', interfaces_red[0])
       tree.write(self.nombre + ".xml")
 
     tree.write(self.nombre + ".xml")
