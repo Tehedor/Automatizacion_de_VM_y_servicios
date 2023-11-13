@@ -45,6 +45,10 @@ class MV:
       tree.write(self.nombre + ".xml")
 
     tree.write(self.nombre + ".xml")
+
+    
+    call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
+    call(["sudo","virsh","define",self.nombre + ".xml"])
     
   def arrancar_mv (self):
     log.debug("arrancar_mv " + self.nombre)
@@ -82,3 +86,5 @@ class Red:
       log.debug('liberar_red ' + self.nombre)
       # comand loberar redes
       call(["sudo","ifconfig",self.nombre,"down"])
+
+
