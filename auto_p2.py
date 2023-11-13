@@ -59,12 +59,30 @@ if second_arg == 'crear':
         name = "s" + num_server
         mv.arrancar_mv(imagen, ['if1'] , False)
 elif second_arg == 'arrancar':
-    mv.arrancar_mv()
-
+    # Arrancar maquinas
+    lb.arrancar_mv()
+    c1.arrancar_mv()
+    for num_server in range(1,num_server+1):
+        name = "s" + num_server
+        name.arrancar_mv()  
+    # Arrancar redes
+    if1.arrancar_red()
+    if2.arrancar_red()
 elif second_arg == 'parar':
-    mv.parar_mv()
+    lb.parar_mv()
+    c1.parar_mv()
+    for num_server in range(1,num_server+1):
+        name = "s" + num_server
+        name.parar_mv()  
 elif second_arg == 'liberar':
-    mv.lib_mb()
+    lb.liberar_red()
+    c1.liberar_red()   
+    for num_server in range(1,num_server+1):
+        name = "s" + num_server
+        name.liberar_red()  
+    # Liberar redes
+    if1.liberar_red()
+    if2.liberar_red()
 else:
     print(f"Error: Argumento desconocido {second_arg}")
 
