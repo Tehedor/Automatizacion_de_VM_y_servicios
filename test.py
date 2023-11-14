@@ -57,10 +57,7 @@ def crear_fiche(nombre,ip,router):
   # call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e","pruebas"])
 
   # sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
-  # with open ('ip_foward','w') as archivo:
-  #   archivo.write("1")
-  # call(["sudo","virt-copy-in", "-a",  nombre + ".qcow2", "ip_foward","/proc/sys/net/ipv4/ip_forward"])
-  # call(["rm","ip_foward"]) 
+  call(["sudo", "virt-edit", "-a", nombre + ".qcow2", "/proc/sys/net/ipv4/ip_forward", "-e", "s/0*/1"])
 
 # Creación de red
 if entrada == '1':
@@ -195,7 +192,7 @@ elif entrada == '9':
   # Eliminar máquina
   call(["sudo","virsh","destroy",nombre_mv])
   
-  call(["sudo","virsh","udenfine",nombre_mv])
+  call(["sudo","virsh","undefine",nombre_mv])
   call(["rm",nombre_mv+".qcow2"])
   call(["rm",nombre_mv+".xml"])
   # Elimnar Red
