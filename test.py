@@ -66,11 +66,11 @@ def crear_fiche(nombre,ip,router):
 if entrada == '1':
   # call(["mkdir","/mnt/tmp/" + user])
   # ////////////////////////////////////////////////////////////
-  # nombre_red = "LAN1"
-  nombre_red = "LAN2"
+  nombre_red = ["LAN1","LAN2"]
   # ////////////////////////////////////////////////////////////
-  call(["sudo","brctl","addbr",nombre_red])
-  call(["sudo","ifconfig",nombre_red,"up"])
+  for lan in nombre_red:
+    call(["sudo","brctl","addbr",lan])
+    call(["sudo","ifconfig",lan,"up"])
 elif entrada == '2':
   # Crear máquina virtual
   # ////////////////////////////////////////////////////////////
@@ -188,7 +188,7 @@ elif entrada == '8':
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   call(["sudo","virsh","shutdown",nombre_mv])
-elif entrada == '9'
+elif entrada == '9':
   nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
