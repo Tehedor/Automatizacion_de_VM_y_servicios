@@ -27,7 +27,7 @@ if len(sys.argv) > 1:
         next_arg = all_vm
 
     else:
-        while i < len(sys.argv) and sys.argv[i] != " ":
+        while i < len(sys.argv) and sys .argv[i] != " ":
             if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
                 next_arg.append(sys.argv[i])
                 i = i + 1
@@ -51,6 +51,68 @@ def pause():
 # Main
 init_log()
 print('CDPS - mensaje info1')
+
+# #########################################################################
+# Control de máquinas y red
+# #########################################################################
+with open ('control_file','w') as archivo:
+    archivo.write("#### RED ####\n")
+    archivo.write("\n#### MAQUINAS VIRTUALES ####\n")
+
+def control_add(name):
+    call(["cp","control_file","control_file_copia"])
+    copia = open("control_file_copia","r")
+    file = open("control_file" ,"w")
+
+    red = False
+    if name == "LAN1" or name == "LAN2":
+        red = True
+
+    rellenar = False
+    for line in copia:
+        if rellenar == True:
+            file.write("/t"+ name)
+            break
+        
+        if red == True:
+            if line == "#### RED ####" and rellenar == False:    
+                rellenar = True
+        else:
+            if line == "#### MAQUINAS VIRTUALES ####" and rellenar == False:
+                rellenar = True
+            
+        file.write(line)
+
+    file.close()
+    newFile.close()
+    call(["rm","control_file_copia"])
+
+    
+def control_rm(self):
+    # etc/apache2/sites-available/argumento.conf
+    call(["cp","control_file","control_file_copia"])
+    copia = open("control_file_copia","r")
+    file = open("control_file" ,"w")
+
+    for line in copia:
+        if self.name not in line:
+            file.write(line)
+
+    file.close()
+    newFile.close()
+    call(["rm","control_file_copia"])
+
+def control_search(self):
+    file = open("control_file","r")
+    for line in copia:
+        palabras = line.split()
+        if self.name in palabras:
+            return True
+    file.close()
+
+# #########################################################################
+# #########################################################################
+
 
 
 if second_arg == 'crear':
@@ -77,7 +139,7 @@ elif second_arg == 'arrancar':
         nombre = MV(nombre_mv)
         nombre.arrancar_mv() 
         nombre.mostrar_consola_mv()
-        
+
     # Arrancar redes
     if next_arg == all_vm:
         if1 = Red("LAN1")

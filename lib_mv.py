@@ -74,6 +74,30 @@ def interfaces_control(self):
 #     return interface
 # ##########################################################################
 # ##########################################################################
+
+# ##########################################################################
+# Balaceador de carga
+# ##########################################################################
+
+
+# with open ('interfaces','w') as archivo:
+#   archivo.write("auto lo\n")
+#   archivo.write("iface lo inet loopback\n\n")
+#   archivo.write("auto eth0\n")
+#   archivo.write("iface eth0 inet static\n")
+#   archivo.write(f"\taddress {ip[0]}\n")
+#   archivo.write("\tnetmask 255.255.255.0\n")
+#   archivo.write("auto eth1\n")
+#   archivo.write("iface eth1 inet static\n")
+#   archivo.write(f"\taddress {ip[1]}\n")
+#   archivo.write("\tnetmask 255.255.255.0\n")
+    
+  
+
+
+
+# ##########################################################################
+# ##########################################################################
     
 class MV:
   def __init__(self, nombre):
@@ -140,6 +164,13 @@ class MV:
     # Arrancar MV
     call(["sudo","virsh","start",self.nombre])
 
+    # Balaceador de carga
+    # ##########################################################
+    if self.nombre == "lb":
+      call(["service","apache2","stop"])
+
+
+    # ##########################################################
   def mostrar_consola_mv (self):
     log.debug("mostrar_mv " + self.nombre)
     # Mostrar consola
