@@ -4,15 +4,18 @@ from lxml import etree
 import getpass
 import sys
 
+entrada = sys.argv[1]
+
+
 # Creación de red
-if argv[1] == 1:
+if entrada == 1:
   # ////////////////////////////////////////////////////////////
-  nombre_red = LAN1
-  # nombre_red = LAN2
+  nombre_red = "LAN1"
+  # nombre_red = "LAN2"
   # ////////////////////////////////////////////////////////////
   call(["sudo","brctl","addbr",nombre_red])
   call(["sudo","ifconfig",nombre_red,"up"])
-elif argv[1] == 2:
+elif entrada == 2:
   # Crear máquina virtual
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
@@ -24,7 +27,7 @@ elif argv[1] == 2:
   call(["qemu-img","create","-f","qcow2","-b",imagen,nombre_mv+".qcow2"])
   # Creacion de XML
   call(["cp","plantilla-vm-pc1.xml",imagen,nombre_mv + ".xml"])
-elif argv[1] == 3:
+elif entrada == 3:
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
   # nombre_mv = "c1"
@@ -60,7 +63,7 @@ elif argv[1] == 3:
 
   tree.write(imagen,nombre_mv + ".xml")
 
-elif argv[1] == 4:
+elif entrada == 4:
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
   # nombre_mv = "c1"
@@ -68,7 +71,7 @@ elif argv[1] == 4:
   # ////////////////////////////////////////////////////////////
   # call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
   call(["sudo","virsh","define",imagen,nombre_mv + ".xml"])
-elif argv[1] == 5:
+elif entrada == 5:
   # Configuración mv
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
@@ -89,7 +92,7 @@ elif argv[1] == 5:
   
   crear_fiche(nombre_mv,ip,router)
   
-elif argv[1] == 6:
+elif entrada == 6:
   # Arrancar maquina virtual
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
@@ -97,7 +100,7 @@ elif argv[1] == 6:
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
   call(["sudo","virsh","start",imagen,nombre_mv])
-elif argv[1] == 7:
+elif entrada == 7:
   # Mostrar consola maquina virtual
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
