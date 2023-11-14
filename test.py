@@ -57,7 +57,7 @@ def crear_fiche(nombre,ip,router):
   # call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e","pruebas"])
 
   # sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
-  call(["sudo", "virt-edit", "-a", nombre + ".qcow2", "/proc/sys/net/ipv4/ip_forward", "-e", "s/0*/1"])
+  # call(["sudo", "bash", "-a", nombre + ".qcow2", "/proc/sys/net/ipv4/ip_forward", "-e", "s/0/1"])
 
 # Creación de red
 if entrada == '1':
