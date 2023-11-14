@@ -85,6 +85,8 @@ class Red:
   def liberar_red(self):
       log.debug('liberar_red ' + self.nombre)
       # comand loberar redes
-      call(["sudo","ifconfig",self.nombre,"down"])
+      # call(["sudo","ifconfig",self.nombre,"down"])
+      # elminar lan
+      call(["sudo","brctl","delbr",self.nombre])
 
 

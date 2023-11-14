@@ -52,12 +52,12 @@ if second_arg == 'crear':
     # Creacion de rotuer
     lb = MV("LB")
     lb.crear_mv( imagen,['if1', 'if2'], True)
-    ip_lb = ["192.1.1.1.1","192.0.0.0"]
+    ip_lb = ["10.11.1.1","10.11.2.1"]
     crear_fiche(lb,ip_lb,True)
     # Creacion de clinete
     c1 = MV("c1")
     c1.crear_mv(imagen, ['if1'], False)
-    ip_c1 = ["1234.134.132.41"]
+    ip_c1 = ["10.11.1.2"]
     crear_fiche(c1,ip_c1,False)
     # Creación de Servidores
     num = "31"
@@ -99,7 +99,7 @@ else:
     print(f"Error: Argumento desconocido {second_arg}")
 
 def crear_fiche(self,ip,router):
-    with open ('hostname','w') as archivo:
+    with open ('interfaces','w') as archivo:
         
         if router == True:
             archivo.write("auto lo\n")
@@ -122,7 +122,7 @@ def crear_fiche(self,ip,router):
                 archivo.write("iface eth1 inet static\n")
                 archivo.write(f"\taddress {ip[0]}\n")
                 archivo.write("\tnetmask 255.255.255.0\n")
-                archivo.write("\tgateway 10.11.1.1\n")
+                archivo.write("\tgateway 10.11.2.1\n")
             else:
                 archivo.write("auto lo\n")
                 archivo.write("iface lo inet loopback\n\n")
@@ -130,10 +130,10 @@ def crear_fiche(self,ip,router):
                 archivo.write("iface eth0 inet static\n")
                 archivo.write(f"\taddress {ip[0]}\n")
                 archivo.write("\tnetmask 255.255.255.0\n")
-                archivo.write("\tgateway 10.11.2.1\n")
+                archivo.write("\tgateway 10.11.1.1\n")
                 
 
     call(["sudo","virth-copy-in", "-a", self.nombre + ".qcow2", "hostname", "/etc/"])
     call(["sudo","virth-copy-in", "-a", self.nombre + ".qcow2", "interfaces", "/etc/network/"])
-    call(["sudo","virth-edit", "-a", self.nombre + ".qcow2", "/etc/hosts", "-e","/'127.0.1.1.*/127.0.1.1 " + self.nombre + "'/"])
+    call(["sudo","virth-edit", "-a", self.nombre + ".qcow2", "/etc/hosts", "-e","/'127.0.1.1.*/127.0.1.1" + " " + self.nombre + "'/"])
     
