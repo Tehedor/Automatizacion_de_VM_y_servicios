@@ -47,14 +47,13 @@ class MV:
     tree.write(self.nombre + ".xml")
 
     
-    call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
+    # call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
     call(["sudo","virsh","define",self.nombre + ".xml"])
     
   def arrancar_mv (self):
     log.debug("arrancar_mv " + self.nombre)
 
-    # Crear MV
-    call(["sudo","virsh","define",self.nombre + ".xml"])
+    # Arrancar MV
     call(["sudo","virsh","start",self.nombre])
 
   def mostrar_consola_mv (self):

@@ -42,7 +42,7 @@ second_arg = sys.argv[1]
 
 
 if second_arg == 'crear':
-    imagen = "./cdps-vm-base-pc1.qcow2"   
+    imagen = "cdps-vm-base-pc1.qcow2"   
     if1 = Red("LAN1")
     if2 = Red("LAN2")
     if1.crear_red()
