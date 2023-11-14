@@ -9,7 +9,9 @@ entrada = sys.argv[1]
 imagen = "cdps-vm-base-pc1.qcow2"
 user = getpass.getuser()
 
-
+# nombre_mv = "lb"
+nombre_mv = "c1"
+# nombre_mv = "s2"
 
 def crear_fiche(nombre,ip,router):
 
@@ -21,18 +23,16 @@ def crear_fiche(nombre,ip,router):
       archivo.write("iface eth0 inet static\n")
       archivo.write(f"\taddress {ip[0]}\n")
       archivo.write("\tnetmask 255.255.255.0\n")
-      archivo.write(f"\tgateway {ip[0]}\n")
       archivo.write("auto eth1\n")
       archivo.write("iface eth1 inet static\n")
       archivo.write(f"\taddress {ip[1]}\n")
       archivo.write("\tnetmask 255.255.255.0\n")
-      archivo.write(f"\tgateway {ip[1]}\n")
     else:
       if nombre.startswith("s"):
         archivo.write("auto lo\n")
         archivo.write("iface lo inet loopback\n\n")
-        archivo.write("auto eth1\n")
-        archivo.write("iface eth1 inet static\n")
+        archivo.write("auto eth0\n")
+        archivo.write("iface eth0 inet static\n")
         archivo.write(f"\taddress {ip[0]}\n")
         archivo.write("\tnetmask 255.255.255.0\n")
         archivo.write("\tgateway 10.11.2.1\n")
@@ -71,7 +71,7 @@ if entrada == '1':
 elif entrada == '2':
   # Crear máquina virtual
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ elif entrada == '2':
   call(["cp","plantilla-vm-pc1.xml", nombre_mv + ".xml"]) 
 elif entrada == '3':
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   
@@ -131,7 +131,7 @@ elif entrada == '3':
 elif entrada == '4':
   # definir maquina
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
@@ -140,12 +140,13 @@ elif entrada == '4':
 elif entrada == '5':
   # Configuración mv
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   
-  num="31"
-  ip = [f"10.11.2.{num}"]
+  # num="32"
+  # ip = [f"10.11.2.{num}"]
+  ip = ["10.11.2.32"]
   
   router = False
   if nombre_mv == "lb":
@@ -161,7 +162,7 @@ elif entrada == '5':
 elif entrada == '6':
   # Arrancar maquina virtual
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
@@ -169,7 +170,7 @@ elif entrada == '6':
 elif entrada == '7':
   # Mostrar consola maquina virtual
   # ////////////////////////////////////////////////////////////
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
@@ -181,12 +182,12 @@ elif entrada == '7':
   
 elif entrada == '8':
   # Para máquina
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   call(["sudo","virsh","shutdown",nombre_mv])
 elif entrada == '9':
-  nombre_mv = "lb"
+  # nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # Eliminar máquina
@@ -196,11 +197,11 @@ elif entrada == '9':
   call(["rm",nombre_mv+".qcow2"])
   call(["rm",nombre_mv+".xml"])
   # Elimnar Red
-  LAN = ["LAN1","LAN2"]
-  for lan in LAN:
-    call(["sudo","ifconfig",lan,"down"])
-    # elminar lan
-    call(["sudo","brctl","delbr",lan])
+  # LAN = ["LAN1","LAN2"]
+  # for lan in LAN:
+  #   call(["sudo","ifconfig",lan,"down"])
+  #   # elminar lan
+  #   call(["sudo","brctl","delbr",lan])
 
 
 
