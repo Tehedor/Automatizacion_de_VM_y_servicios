@@ -50,7 +50,7 @@ def crear_fiche(nombre,ip,router):
 
 
   call(["sudo","virt-copy-in", "-a", nombre + ".qcow2", "hostname", "/etc/"])
-  call(["rm","hostanme"])
+  call(["rm","hostname"])
   call(["sudo","virt-copy-in", "-a", nombre + ".qcow2", "interfaces", "/etc/network/"])
   call(["rm","interfaces"])
   call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e",f"s*/'127.0.1.1.*/127.0.1.1 {nombre} '/"])
