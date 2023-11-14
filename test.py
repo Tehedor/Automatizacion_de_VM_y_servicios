@@ -194,7 +194,8 @@ elif entrada == '9':
   # nombre_mv = "s1"
   # Eliminar máquina
   call(["sudo","virsh","destroy",nombre_mv])
-  call(["sudo","virsh","udenfined",nombre_mv])
+  
+  call(["sudo","virsh","udenfine",nombre_mv])
   call(["rm",nombre_mv+".qcow2"])
   call(["rm",nombre_mv+".xml"])
   # Elimnar Red
