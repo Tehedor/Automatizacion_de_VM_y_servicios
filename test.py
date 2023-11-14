@@ -176,9 +176,6 @@ elif entrada == '7':
   # ////////////////////////////////////////////////////////////
   # call(["sudo","virsh","console",imagen,nombre_mv])
   call(["xterm","-e","sudo","virsh","console",nombre_mv])
-  call(["xterm","-e","sudo","undefined","console",nombre_mv])
-  call(["rm", nombre_mv + ".qcow2"])
-  call(["rm", nombre_mv + ".xml"])
   
 elif entrada == '8':
   # Para máquina
