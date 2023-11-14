@@ -53,7 +53,7 @@ def crear_fiche(nombre,ip,router):
   call(["rm","hostname"])
   call(["sudo","virt-copy-in", "-a", nombre + ".qcow2", "interfaces", "/etc/network/"])
   call(["rm","interfaces"])
-  call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e",f"s*/'127.0.1.1.*/127.0.1.1 {nombre} '/"])
+  call(["sudo", "virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e", f"s/127.0.1.1.*/127.0.1.1 {nombre}/"])
   # call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e","pruebas"])
 
   # sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
