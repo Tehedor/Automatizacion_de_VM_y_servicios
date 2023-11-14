@@ -6,12 +6,68 @@ import sys
 
 entrada = sys.argv[1]
 
+imagen = "cdps-vm-base-pc1.qcow2"
+user = getpass.getuser()
+
+
+
+def crear_fiche(nombre,ip,router):
+
+  with open ('interfaces','w') as archivo:
+    if router == True:
+      archivo.write("auto lo\n")
+      archivo.write("iface lo inet loopback\n\n")
+      archivo.write("auto eth0\n")
+      archivo.write("iface eth0 inet static\n")
+      archivo.write(f"\taddress {ip[0]}\n")
+      archivo.write("\tnetmask 255.255.255.0\n")
+      archivo.write(f"\tgateway {ip[0]}\n")
+      archivo.write("auto eth1\n")
+      archivo.write("iface eth1 inet static\n")
+      archivo.write(f"\taddress {ip[1]}\n")
+      archivo.write("\tnetmask 255.255.255.0\n")
+      archivo.write(f"\tgateway {ip[1]}\n")
+    else:
+      if nombre.startswith("s"):
+        archivo.write("auto lo\n")
+        archivo.write("iface lo inet loopback\n\n")
+        archivo.write("auto eth1\n")
+        archivo.write("iface eth1 inet static\n")
+        archivo.write(f"\taddress {ip[0]}\n")
+        archivo.write("\tnetmask 255.255.255.0\n")
+        archivo.write("\tgateway 10.11.2.1\n")
+      else:
+        archivo.write("auto lo\n")
+        archivo.write("iface lo inet loopback\n\n")
+        archivo.write("auto eth0\n")
+        archivo.write("iface eth0 inet static\n")
+        archivo.write(f"\taddress {ip[0]}\n")
+        archivo.write("\tnetmask 255.255.255.0\n")
+        archivo.write("\tgateway 10.11.1.1\n")
+  
+  with open ('hostname','w') as archivo:
+    archivo.write(nombre)
+
+
+  call(["sudo","virt-copy-in", "-a", nombre + ".qcow2", "hostname", "/etc/"])
+  call(["rm","hostanme"])
+  call(["sudo","virt-copy-in", "-a", nombre + ".qcow2", "interfaces", "/etc/network/"])
+  call(["rm","interfaces"])
+  call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e",f"s*/'127.0.1.1.*/127.0.1.1 {nombre} '/"])
+  # call(["sudo","virt-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e","pruebas"])
+
+  # sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+  # with open ('ip_foward','w') as archivo:
+  #   archivo.write("1")
+  # call(["sudo","virt-copy-in", "-a",  nombre + ".qcow2", "ip_foward","/proc/sys/net/ipv4/ip_forward"])
+  # call(["rm","ip_foward"]) 
 
 # Creación de red
 if entrada == '1':
+  # call(["mkdir","/mnt/tmp/" + user])
   # ////////////////////////////////////////////////////////////
-  nombre_red = "LAN1"
-  # nombre_red = "LAN2"
+  # nombre_red = "LAN1"
+  nombre_red = "LAN2"
   # ////////////////////////////////////////////////////////////
   call(["sudo","brctl","addbr",nombre_red])
   call(["sudo","ifconfig",nombre_red,"up"])
@@ -22,24 +78,36 @@ elif entrada == '2':
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
-  user = getpass.getuser()
   # Creación de MV
-  call(["qemu-img","create","-f","qcow2","-b",imagen,nombre_mv+".qcow2"])
+  call(["qemu-img","create","-f","qcow2","-b",imagen , nombre_mv+".qcow2"])
   # Creacion de XML
-  call(["cp","plantilla-vm-pc1.xml",imagen,nombre_mv + ".xml"])
+  call(["cp","plantilla-vm-pc1.xml", nombre_mv + ".xml"]) 
 elif entrada == '3':
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
+  
+  num="31"
+  interfaces_red = ["LAN2"]
+  
+  router = False
+  if nombre_mv == "lb":
+    router = True
+    interfaces_red = ["LAN1","LAN2"]
+  elif nombre_mv == "c1":
+    interfaces_red = ["LAN1"]
+
   # ////////////////////////////////////////////////////////////
   # Editar XML
-  tree = etree.parse(imagen,nombre_mv + ".xml")
+  user = getpass.getuser()
+  tree = etree.parse(nombre_mv + ".xml")
   root = tree.getroot()
   name = root.find('name')
-  name.text = imagen,nombre_mv
+  name.text = nombre_mv
   source = root.find('.//devices/disk/source')
-  source.set('file', '/mnt/tmp/' + user + '/' + imagen,nombre_mv + '.qcow2')
+  # /mnt/tmp/XXX/XXX.qcow2
+  source.set('file', 'mnt/tmp/' + user + '/' + nombre_mv + '.qcow2')
   devices = root.find('.//devices')
   if router == True:
     # Interfaz 1
@@ -59,18 +127,19 @@ elif entrada == '3':
   else:
     source = devices.find('interface/source')
     source.set('bridge', interfaces_red[0])
-    tree.write(imagen,nombre_mv + ".xml")
+    tree.write(nombre_mv + ".xml")
 
-  tree.write(imagen,nombre_mv + ".xml")
+  tree.write(nombre_mv + ".xml")
 
 elif entrada == '4':
+  # definir maquina
   # ////////////////////////////////////////////////////////////
   nombre_mv = "lb"
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
-  call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
-  call(["sudo","virsh","define",imagen,nombre_mv + ".xml"])
+  # call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
+  call(["sudo","virsh","define",nombre_mv + ".xml"])
 elif entrada == '5':
   # Configuración mv
   # ////////////////////////////////////////////////////////////
@@ -99,7 +168,7 @@ elif entrada == '6':
   # nombre_mv = "c1"
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
-  call(["sudo","virsh","start",imagen,nombre_mv])
+  call(["sudo","virsh","start",nombre_mv])
 elif entrada == '7':
   # Mostrar consola maquina virtual
   # ////////////////////////////////////////////////////////////
@@ -108,48 +177,36 @@ elif entrada == '7':
   # nombre_mv = "s1"
   # ////////////////////////////////////////////////////////////
   # call(["sudo","virsh","console",imagen,nombre_mv])
-  call(["xterm","-e","sudo","virsh","console",self.nombre])
+  call(["xterm","-e","sudo","virsh","console",nombre_mv])
+  call(["xterm","-e","sudo","undefined","console",nombre_mv])
+  call(["rm", nombre_mv + ".qcow2"])
+  call(["rm", nombre_mv + ".xml"])
+  
+elif entrada == '8':
+  # Para máquina
+  nombre_mv = "lb"
+  # nombre_mv = "c1"
+  # nombre_mv = "s1"
+  call(["sudo","virsh","shutdown",nombre_mv])
+elif entrada == '9'
+  nombre_mv = "lb"
+  # nombre_mv = "c1"
+  # nombre_mv = "s1"
+  # Eliminar máquina
+  call(["sudo","virsh","destroy",nombre_mv])
+  call(["sudo","virsh","udenfined",nombre_mv])
+  call(["rm",nombre_mv+".qcow2"])
+  call(["rm",nombre_mv+".xml"])
+  # Elimnar Red
+  LAN = ["LAN1","LAN2"]
+  for lan in LAN:
+    call(["sudo","ifconfig",lan,"down"])
+    # elminar lan
+    call(["sudo","brctl","delbr",lan])
 
 
 
 
 
 
-def crear_fiche(nombre,ip,router):
-    with open ('interfaces','w') as archivo:
-        
-    if router == True:
-      archivo.write("auto lo\n")
-      archivo.write("iface lo inet loopback\n\n")
-      archivo.write("auto eth0\n")
-      archivo.write("iface eth0 inet static\n")
-      archivo.write(f"\taddress {ip[0]}\n")
-      archivo.write("\tnetmask 255.255.255.0\n")
-      archivo.write("\tgateway 10.11.2.33\n")
-      archivo.write("auto eth1\n")
-      archivo.write("iface eth1 inet static\n")
-      archivo.write(f"\taddress {ip[1]}\n")
-      archivo.write("\tnetmask 255.255.255.0\n")
-      archivo.write("\tgateway 10.11.2.33\n")
-    else:
-      if nombre.startswith("s"):
-        archivo.write("auto lo\n")
-        archivo.write("iface lo inet loopback\n\n")
-        archivo.write("auto eth1\n")
-        archivo.write("iface eth1 inet static\n")
-        archivo.write(f"\taddress {ip[0]}\n")
-        archivo.write("\tnetmask 255.255.255.0\n")
-        archivo.write("\tgateway 10.11.2.1\n")
-      else:
-        archivo.write("auto lo\n")
-        archivo.write("iface lo inet loopback\n\n")
-        archivo.write("auto eth0\n")
-        archivo.write("iface eth0 inet static\n")
-        archivo.write(f"\taddress {ip[0]}\n")
-        archivo.write("\tnetmask 255.255.255.0\n")
-        archivo.write("\tgateway 10.11.1.1\n")
-                
 
-    call(["sudo","virth-copy-in", "-a", nombre + ".qcow2", "hostname", "/etc/"])
-    call(["sudo","virth-copy-in", "-a", nombre + ".qcow2", "interfaces", "/etc/network/"])
-    call(["sudo","virth-edit", "-a", nombre + ".qcow2", "/etc/hosts", "-e","/'127.0.1.1.*/127.0.1.1" + " " + nombre + "'/"])

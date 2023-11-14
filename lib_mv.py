@@ -65,6 +65,7 @@ class MV:
     
     #  Detener las maquinas virutales con virsh shutdown
     call(["sudo","virsh","shutdown",self.nombre])
+    
 
   def liberar_mv (self):
     log.debug("liberar_mv " + self.nombre)
@@ -84,7 +85,7 @@ class Red:
   def liberar_red(self):
       log.debug('liberar_red ' + self.nombre)
       # comand loberar redes
-      # call(["sudo","ifconfig",self.nombre,"down"])
+      call(["sudo","ifconfig",self.nombre,"down"])
       # elminar lan
       call(["sudo","brctl","delbr",self.nombre])
 
