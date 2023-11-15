@@ -2,7 +2,7 @@
 from subprocess import call, run
 from lib_mv import MV,Red
 import logging, sys, json
-
+# main
 # #########################################################################
 
 with open('auto_p2.json', 'r') as f:
