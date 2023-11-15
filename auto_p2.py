@@ -16,25 +16,7 @@ if len(sys.argv) < 2:
     print("Error: No se proporcionó el segundo argumento.")
     sys.exit(1)
 
-second_arg = sys.argv[1]
 
-next_arg = []
-i=2
-
-all_vm = ["c1","lb","s1","s2","s3"] 
-if len(sys.argv) > 1:
-    if sys.argv[2] == " ":
-        next_arg = all_vm
-
-    else:
-        while i < len(sys.argv) and sys .argv[i] != " ":
-            if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
-                next_arg.append(sys.argv[i])
-                i = i + 1
-            else:
-                print(f"maquina {sys.argv[i]} no se puede crear")
-
-# #########################################################################
 def init_log():
     # Creacion y configuracion del logger
     logging.basicConfig(level=logging.DEBUG)
@@ -55,64 +37,120 @@ print('CDPS - mensaje info1')
 # #########################################################################
 # Control de máquinas y red
 # #########################################################################
-with open ('control_file','w') as archivo:
-    archivo.write("#### RED ####\n")
-    archivo.write("\n#### MAQUINAS VIRTUALES ####\n")
+# with open ('control_file','w') as archivo:
+#     archivo.write("#### RED ####\n\n")
+#     archivo.write("\n#### MAQUINAS VIRTUALES ####\n")
 
-def control_add(name):
-    call(["cp","control_file","control_file_copia"])
-    copia = open("control_file_copia","r")
-    file = open("control_file" ,"w")
+# def control_add(name):
+#     call(["cp","control_file","control_file_copia"])
+#     copia = open("control_file_copia","r")
+#     file = open("control_file" ,"w")
 
-    red = False
-    if name == "LAN1" or name == "LAN2":
-        red = True
+#     red = False
+#     if name == "LAN_add" or name == "LAN_start":
+#         red = True
 
-    rellenar = False
-    for line in copia:
-        if rellenar == True:
-            file.write("/t"+ name)
-            break
+#     rellenar = False
+#     copia_lines = copia.readlines()
+#     for i,line in copia:
+#         if rellenar == True:
+#             if red == True:
+#                 file.write("/t1")
+#             else:
+#                 file.write(line)
+#                 file.write("/t"+ name)
+#             break
         
-        if red == True:
-            if line == "#### RED ####" and rellenar == False:    
-                rellenar = True
-        else:
-            if line == "#### MAQUINAS VIRTUALES ####" and rellenar == False:
-                rellenar = True
-            
-        file.write(line)
+#         if rellenar == False:
+#             if name = "LAN_add":
+#                 if i = 0:
+#                     rellenar = True
+#             elif name = "LAN_start":
+#                 if i = 1:       # else:
+#             #     if i = copia_lines.len():
+#             #         rellenar = True
+#                     rellenar = True
+     
 
-    file.close()
-    newFile.close()
-    call(["rm","control_file_copia"])
+#         if red == True:
+#             if line == "#### RED ####" and rellenar == False:    
+#                 rellenar = True
+#         else:
+#             if line == "#### MAQUINAS VIRTUALES ####" and rellenar == False:
+#                 rellenar = True
+            
+#         file.write(line)
+
+#     file.close()
+#     newFile.close()
+#     call(["rm","control_file_copia"])
 
     
-def control_rm(self):
-    # etc/apache2/sites-available/argumento.conf
-    call(["cp","control_file","control_file_copia"])
-    copia = open("control_file_copia","r")
-    file = open("control_file" ,"w")
+# def control_rm(self):
+#     # etc/apache2/sites-available/argumento.conf
+#     call(["cp","control_file","control_file_copia"])
+#     copia = open("control_file_copia","r")
+#     file = open("control_file" ,"w")
 
-    for line in copia:
-        if self.name not in line:
-            file.write(line)
+#     if name == "LAN":
+#         for i,line in copia:
+#             if i == 1 and i == 2:
+#                 file.write("0")
+#     else:
+#         for line in copia:
+#             if self.name not in line:
+#                 file.write(line)
 
-    file.close()
-    newFile.close()
-    call(["rm","control_file_copia"])
+#     file.close()
+#     newFile.close()
+#     call(["rm","control_file_copia"])
 
-def control_search(self):
-    file = open("control_file","r")
-    for line in copia:
-        palabras = line.split()
-        if self.name in palabras:
-            return True
-    file.close()
+# def control_search(nombre):
+#     file = open("control_file","r")
+#     for line in copia:
+#         palabras = line.split()
+#         if nombre in palabras:
+#             return True
+#     file.close()
 
 # #########################################################################
 # #########################################################################
 
+
+# #########################################################################
+# Argumentos
+# #########################################################################
+second_arg = sys.argv[1]
+
+next_arg = []
+i=2
+
+all_vm = ["c1","lb","s1","s2","s3"] 
+if len(sys.argv) > 1:
+    if sys.argv[2] == " ":
+        next_arg = all_vm
+
+    else:
+        while i < len(sys.argv) and sys .argv[i] != " ":
+            if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
+                print(f"maquina {sys.argv[i]} no se puede crear")
+            else:
+                
+                next_arg.append(sys.argv[i])
+                i = i + 1
+    # else:
+    #     while i < len(sys.argv) and sys .argv[i] != " ":
+    #         if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
+    #             print(f"maquina {sys.argv[i]} no se puede crear")
+    #         else:
+    #             if control_search(sys.argv[i]) == True:
+    #                 print(f"maquina {sys.argv[i]} ya existe")
+    #             else:
+    #                 next_arg.append(sys.argv[i])
+    #             i = i + 1
+
+# #########################################################################
+# #########################################################################
 
 
 if second_arg == 'crear':
