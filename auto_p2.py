@@ -2,7 +2,28 @@
 from subprocess import call, run
 from lib_mv import MV,Red
 import logging, sys, json
-# main
+from os import path
+
+# #########################################################################
+# Control file 
+# #########################################################################
+reset_file = False
+if path.exists("control_file") == False:
+    reset_file = True
+else:
+    with open ('control_file','r') as archivo:
+        n_lines = len(archivo.readlines())
+    if n_lines < 5:
+        reset_file = True
+          
+
+if reset_file == True:
+    with open ('control_file','w') as archivo:
+        archivo.write("#### RED #### 0 -> no lan; 1 -> hay LAN\n")
+        archivo.write("\tLAN\t0\n")
+        archivo.write("\n#### MAQUINAS VIRTUALES #### 0 -> parada; 1 -> arrancada\n\n")  
+    n_lines = 4
+# #########################################################################
 # #########################################################################
 
 with open('auto_p2.json', 'r') as f:
@@ -37,81 +58,115 @@ print('CDPS - mensaje info1')
 # #########################################################################
 # Control de máquinas y red
 # #########################################################################
-# with open ('control_file','w') as archivo:
-#     archivo.write("#### RED ####\n\n")
-#     archivo.write("\n#### MAQUINAS VIRTUALES ####\n")
 
-# def control_add(name):
-#     call(["cp","control_file","control_file_copia"])
-#     copia = open("control_file_copia","r")
-#     file = open("control_file" ,"w")
+def control_add(name):
+    call(["cp","control_file","control_file_copia"])
+    copia = open("control_file_copia","r")
+    file = open("control_file" ,"w")
 
-#     red = False
-#     if name == "LAN_add" or name == "LAN_start":
-#         red = True
 
-#     rellenar = False
-#     copia_lines = copia.readlines()
-#     for i,line in copia:
-#         if rellenar == True:
-#             if red == True:
-#                 file.write("/t1")
-#             else:
-#                 file.write(line)
-#                 file.write("/t"+ name)
-#             break
-        
-#         if rellenar == False:
-#             if name = "LAN_add":
-#                 if i = 0:
-#                     rellenar = True
-#             elif name = "LAN_start":
-#                 if i = 1:       # else:
-#             #     if i = copia_lines.len():
-#             #         rellenar = True
-#                     rellenar = True
-     
+    # print(red)
+    rellenar = False
+    # copia_lines = copia.readlines()
+    hecho = 0
+    for i,line in enumerate(copia):
+        if hecho == 0:
+            if name == "LAN":
+                    if i == 1:
+                        rellenar = True
+            else:
+                if i > 2 and line.strip() == "":
+                    rellenar = True
 
-#         if red == True:
-#             if line == "#### RED ####" and rellenar == False:    
-#                 rellenar = True
-#         else:
-#             if line == "#### MAQUINAS VIRTUALES ####" and rellenar == False:
-#                 rellenar = True
+            if rellenar == True:
+                if name == "LAN":
+                    line = "\tLAN\t1\n"
+                else:
+                    file.write("\t"+ name + "\t0\n")
+                hecho = 1
+                misma_linea = False
+                rellenar = False
             
-#         file.write(line)
+        file.write(line)
 
-#     file.close()
-#     newFile.close()
-#     call(["rm","control_file_copia"])
+    file.close()
+    copia.close()
+    call(["rm","control_file_copia"])
 
     
-# def control_rm(self):
-#     # etc/apache2/sites-available/argumento.conf
-#     call(["cp","control_file","control_file_copia"])
-#     copia = open("control_file_copia","r")
-#     file = open("control_file" ,"w")
+def control_rm(nombre):
+    # etc/apache2/sites-available/argumento.conf
+    call(["mv","control_file","control_file_copia"])
+    file = open("control_file" ,"w")
+    copia = open("control_file_copia","r")
+    
+    if nombre == "LAN":
+        for i,line in enumerate(copia):
+            if i == 1:
+               file.write("\tLAN\t0\n")
+            else:
+                file.write(line)
+    else:
+        for line in copia:
+            if nombre not in line:
+                file.write(line)
 
-#     if name == "LAN":
-#         for i,line in copia:
-#             if i == 1 and i == 2:
-#                 file.write("0")
-#     else:
-#         for line in copia:
-#             if self.name not in line:
-#                 file.write(line)
+    file.close()
+    copia.close()
+    call(["rm","control_file_copia"])
 
-#     file.close()
-#     newFile.close()
-#     call(["rm","control_file_copia"])
+def control_search(nombre):
+    with open("control_file","r") as file:
+        for line in file:
+            palabras = line.split()
+            if nombre in palabras:
+                return True
+    return False
 
-# def control_search(nombre):
-#     file = open("control_file","r")
-#     for line in copia:
-#         palabras = line.split()
-#         if nombre in palabras:
-#             return True
-#     file.close()
+def control_state(nombre, state):
+    with open("control_file","r") as file:
+        for line in file:
+            palabras = line.split()            
+            if line.strip() != "":
+                if palabras[0] == nombre:
+                    if palabras[1] == state:
+                        return True
+                    else:
+                        return False
+    return False
+
+def control_state_mac(nombre, state):
+    call(["cp","control_file","control_file_copia"])
+
+    exite = control_search(nombre)
+
+    copia = open("control_file_copia" ,"r")
+    
+    file = open("control_file","w") 
+
+   
+    cambios = False    
+    for line in copia:
+        c = 0
+        if exite == True:
+            if nombre in line:
+                palabras = line.split()
+                if palabras[1] != state:
+                    palabras[1] = "\t" + state
+                    line = "\t" + palabras[0] + palabras[1] + "\n"
+                    file.write(line)
+                    c = 1
+                    cambios = True
+        if c == 0: 
+            file.write(line)
+                # return True
+            
+    file.close()
+    copia.close()
+    call(["rm","control_file_copia"])
+    # return True
+    return cambios
+
 
 # #########################################################################
 # #########################################################################
@@ -123,31 +178,29 @@ print('CDPS - mensaje info1')
 second_arg = sys.argv[1]
 
 next_arg = []
-i=2
 
-all_vm = ["c1","lb","s1","s2","s3"] 
+all_vm = ["c1","lb"]
+for i in range(num_server):
+    all_vm.append("s" + str(i+1)) 
+
+i = 2
 if len(sys.argv) > 1:
     if sys.argv[2] == " ":
         next_arg = all_vm
-
     else:
         while i < len(sys.argv) and sys .argv[i] != " ":
             if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
-                print(f"maquina {sys.argv[i]} no se puede crear")
+                print(f"maquina {sys.argv[i]} no se puede crear")                
             else:
-                
-                next_arg.append(sys.argv[i])
-                i = i + 1
-    # else:
-    #     while i < len(sys.argv) and sys .argv[i] != " ":
-    #         if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
-    #             print(f"maquina {sys.argv[i]} no se puede crear")
-    #         else:
-    #             if control_search(sys.argv[i]) == True:
-    #                 print(f"maquina {sys.argv[i]} ya existe")
-    #             else:
-    #                 next_arg.append(sys.argv[i])
-    #             i = i + 1
+                while i < len(sys.argv) and sys .argv[i] != " ":
+                    if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
+                        print(f"maquina {sys.argv[i]} no se puede crear")
+                    else:
+                        if control_search(sys.argv[i]) == True:
+                            print(f"maquina {sys.argv[i]} ya existe")
+                        else:
+                            next_arg.append(sys.argv[i])
+                        i = i + 1
 
 # #########################################################################
 # #########################################################################
