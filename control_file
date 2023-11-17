@@ -1,0 +1,5 @@
+#### RED #### 0 -> no lan; 1 -> hay LAN
+	LAN	0
+
+#### MAQUINAS VIRTUALES #### 0 -> parada; 1 -> arrancada
+

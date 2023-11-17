@@ -184,17 +184,18 @@ all_vm = ["c1","lb"]
 for i in range(num_server):
     all_vm.append("s" + str(i+1)) 
 
+i=2
+if len(sys.argv) > 2:
+    while i < len(sys.argv) and sys.argv[i] != " ":
+        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit()):
+            print(f"maquina {sys.argv[i]} no permitida")                
+        else:
+            next_arg.append(sys.argv[i])
+        i = i + 1
+else:
+    next_arg = all_vm
 
-if len(sys.argv) > 1:
-    if sys.argv[2] == " ":
-        next_arg = all_vm
-    else:
-        while i < len(sys.argv) and sys.argv[i] != " ":
-            if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (self.name.startswith("s") and self.name[1:].isdigit()):
-                print(f"maquina {sys.argv[i]} no permitida")                
-            else:
-                next_arg.append(sys.argv[i])
-            i = i + 1
+
 
 # #########################################################################
 # #########################################################################
@@ -219,7 +220,8 @@ if second_arg == 'crear':
             router = False
             if nombre_mv == "lb":
                 router = True
-            nombre.crear_mv(imagen,interface_red, router)
+            nombre.crear_mv(imagen, router)
+            # nombre.crear_mv(imagen,interface_red, router)
             control_add(nombre_mv)
         else:
             print(f"Error: La maquina {nombre_mv} ya existe")
@@ -232,7 +234,7 @@ elif second_arg == 'arrancar':
             if control_state(nombre_mv,"0"):    
                 nombre = MV(nombre_mv)
                 nombre.arrancar_mv() 
-                nombre.mostrar_consola_mv()
+                # nombre.mostrar_consola_mv()
                 control_change_state(nombre_mv,"1")
             else:
                 print(f"Error: La maquina {nombre_mv} ya esta arrancada")
@@ -262,12 +264,14 @@ elif second_arg == 'liberar':
     with open ('control_file','r') as archivo:
         n_lines = len(archivo.readlines())
 
-    if n_lines < 5:
+    print(n_lines)
+
+    if n_lines < 6:
         if1 = Red("LAN1")
         if2 = Red("LAN2")
         if1.liberar_red()
         if2.liberar_red()
-        control_state_mac("LAN","0")
+        control_rm("LAN")
 
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
