@@ -111,19 +111,21 @@ class MV:
   def mostrar_consola_mv (self):
     log.debug("mostrar_mv " + self.nombre)
     # Mostrar consola
-    call(["xterm","-e","sudo","virsh","console",self.nombre])
+    # call(["xterm","-e","sudo","virsh","console",self.nombre])
+    # Mostrar la consola sin que se dentenga el prgrama, mostrando de esta manera todas la consolas a la vez
+    run(["xterm","-e","sudo","virsh","console",self.nombre])
   def parar_mv (self):
     log.debug("parar_mv " + self.nombre)
 
     #  Detener las maquinas virutales con virsh shutdown
-    call(["sudo","virsh","shutdown",self.nombre])
+    call(["sudo","virsh","shutdown",self.nombre]) #Apagar la consola de manera suave
 
 
   def liberar_mv (self):
     log.debug("liberar_mv " + self.nombre)
     # Liberar MV
-    call(["sudo","virsh","destroy",self.nombre])
-    call(["sudo","virsh","undefine",self.nombre])
+    call(["sudo","virsh","destroy",self.nombre])  #Apagar la consola de manera brusca
+    call(["sudo","virsh","undefine",self.nombre]) #Eliminar la MV
     call(["rm",self.nombre + ".xml"])
     call(["rm",self.nombre + ".qcow2"])
 

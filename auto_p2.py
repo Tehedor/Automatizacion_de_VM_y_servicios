@@ -161,7 +161,8 @@ elif second_arg == 'liberar':
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
-        run(["xterm","-e","sudo","virsh","console",nombre_mv])
+        mostrar_consola_mv(nombre_mv)
+        # run(["xterm","-e","sudo","virsh","console",nombre_mv])
 elif second_arg == 'monitor':
     run(["watch", "-n", "2", "virsh", "list", "--all"])
 else:
