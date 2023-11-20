@@ -73,7 +73,8 @@ for i in range(num_server):
 i=2
 if len(sys.argv) > 2:
     while i < len(sys.argv) and sys.argv[i] != " ":
-        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and (sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit()):
+        print(sys.argv[i][1:].isdigit())
+        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit()):
             print(f"maquina {sys.argv[i]} no permitida")                
         else:
             next_arg.append(sys.argv[i])

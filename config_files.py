@@ -1,3 +1,9 @@
+import logging
+from subprocess import call,run
+from lxml import etree
+import getpass
+import logging, sys, json
+
 # #########################################################################
 # #########################################################################
 with open('auto_p2.json', 'r') as f:
@@ -25,12 +31,12 @@ def crear_fiche(self,ip,router):
             archivo.write("iface eth1 inet static\n")
             archivo.write(f"\taddress {ip[1]}\n")
             archivo.write("\tnetmask 255.255.255.0\n\n")
-            # # Configuración adicional para habilitar el enrutamiento
-            # archivo.write("# Configuración adicional para habilitar el enrutamiento\n")
-            # archivo.write("up ip route add 10.11.1.0/24 via 10.11.1.1 dev eth0\n")
-            # archivo.write("up ip route add 10.11.2.0/24 via 10.11.2.1 dev eth1\n\n")
-            # archivo.write("# Habilitar el enrutamiento IP\n")
-            # archivo.write("up sysctl -w net.ipv4.ip_forward=1\n")
+            # Configuración adicional para habilitar el enrutamiento
+            archivo.write("# Configuración adicional para habilitar el enrutamiento\n")
+            archivo.write("up ip route add 10.11.1.0/24 via 10.11.1.1 dev eth0\n")
+            archivo.write("up ip route add 10.11.2.0/24 via 10.11.2.1 dev eth1\n\n")
+            archivo.write("# Habilitar el enrutamiento IP\n")
+            archivo.write("up sysctl -w net.ipv4.ip_forward=1\n")
         else:
             if self.nombre.startswith("s"):
                 archivo.write("auto lo\n")
@@ -55,22 +61,23 @@ def crear_fiche(self,ip,router):
   # Index servidores
     if self.nombre.startswith("s"):
       # with open ('/var/www/html/index.html','w') as archivo:
+        i = self.nombre[1:]
         with open ('index.html','w') as archivo:
             archivo.write("<html>\n")
             archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
             archivo.write("</html>\n")
     
-    if router:
-        with open ('haproxy.cfg','w') as archivo:
-            archivo.write("frontend lb\n")
-            archivo.write("\tbind *:80\n")
-            archivo.write("\tmode http\n\n")
-            archivo.write("\tdefault_backendwebservers\n")
-            archivo.write("backend webservers\n")
-            archivo.write("\tmode http\n")
-            archivo.write("\tbalance roundrobin\n")
-            for i in range(num_server):
-                archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
+    # if router:
+    #     with open ('haproxy.cfg','w') as archivo:
+    #         archivo.write("frontend lb\n")
+    #         archivo.write("\tbind *:80\n")
+    #         archivo.write("\tmode http\n\n")
+    #         archivo.write("\tdefault_backendwebservers\n")
+    #         archivo.write("backend webservers\n")
+    #         archivo.write("\tmode http\n")
+    #         archivo.write("\tbalance roundrobin\n")
+    #         for i in range(num_server):
+    #             archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
 
 
 
@@ -78,7 +85,12 @@ def crear_fiche(self,ip,router):
 # Configuración del xml
 # ##########################################################################
 # Editar XML
-def editar_xml(self,router):
+def editar_xml(self,router,interface_red):
+    user = getpass.getuser()
+
+    # interface_red = interfaces_control(self)
+    # ip_red = ip_control(self)
+
     tree = etree.parse(self.nombre + ".xml")
     root = tree.getroot()
     name = root.find('name')

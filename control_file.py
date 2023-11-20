@@ -1,3 +1,10 @@
+import logging
+from subprocess import call,run
+from lxml import etree
+import getpass
+import logging, sys, json
+
+
 # #########################################################################
 # Control de máquinas y red
 # #########################################################################
