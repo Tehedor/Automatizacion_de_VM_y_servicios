@@ -32,11 +32,14 @@ def crear_fiche(self,ip,router):
             archivo.write(f"\taddress {ip[1]}\n")
             archivo.write("\tnetmask 255.255.255.0\n\n")
             # Configuración adicional para habilitar el enrutamiento
-            archivo.write("# Configuración adicional para habilitar el enrutamiento\n")
-            archivo.write("up ip route add 10.11.1.0/24 via 10.11.1.1 dev eth0\n")
-            archivo.write("up ip route add 10.11.2.0/24 via 10.11.2.1 dev eth1\n\n")
-            archivo.write("# Habilitar el enrutamiento IP\n")
-            archivo.write("up sysctl -w net.ipv4.ip_forward=1\n")
+            archivo.write("up echo 1 > /proc/sys/net/ipv4/ip_forward\n")
+            # archivo.write("# Configuración adicional para habilitar el enrutamiento\n")
+            # archivo.write("up ip route add 10.11.1.0/24 via 10.11.1.1 dev eth1\n")
+            # archivo.write("up ip route add 10.11.2.0/24 via 10.11.2.1 dev eth0\n\n")
+            # archivo.write("up iptables -t nat -A POSTROUTING 10.11.1.0/24 -o eth1 -j MASQUERADE\n")
+            # archivo.write("up ip route add 10.11.2.0/24 via 10.11.2.1 dev eth1\n\n")
+            # archivo.write("# Habilitar el enrutamiento IP\n")
+            # archivo.write("up sysctl -w net.ipv4.ip_forward=1\n")
         else:
             if self.nombre.startswith("s"):
                 archivo.write("auto lo\n")

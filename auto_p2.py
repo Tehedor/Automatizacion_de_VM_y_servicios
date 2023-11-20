@@ -151,8 +151,6 @@ elif second_arg == 'liberar':
     with open ('control_file','r') as archivo:
         n_lines = len(archivo.readlines())
 
-    print(n_lines)
-
     if n_lines < 6:
         if1 = Red("LAN1")
         if2 = Red("LAN2")
