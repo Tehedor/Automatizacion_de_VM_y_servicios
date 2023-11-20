@@ -64,7 +64,7 @@ class MV:
     call(["cp","plantilla-vm-pc1.xml",self.nombre + ".xml"])
     
     # Modificar XML
-    editar_xml(self,router)
+    editar_xml(self,router,interface_red)
 
     # call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
     call(["sudo","virsh","define",self.nombre + ".xml"])
@@ -82,9 +82,9 @@ class MV:
       call(["rm","index.html"])
     
     # Ruter
-    if router:
-      call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
-      call(["rm","haproxy.cfg"])
+    # if router:
+    #   call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
+    #   call(["rm","haproxy.cfg"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv4.conf.all.forwarding=1/net.ipv4.conf.all.forwarding=1/"])
@@ -103,8 +103,8 @@ class MV:
 
     # Balaceador de carga
     # ##########################################################
-    if self.nombre == "lb":
-      call(["service","apache2","stop"])
+    # if self.nombre == "lb":
+    #   call(["service","apache2","stop"])
 
 
     # ##########################################################
@@ -123,6 +123,7 @@ class MV:
     log.debug("liberar_mv " + self.nombre)
     # Liberar MV
     call(["sudo","virsh","destroy",self.nombre])
+    call(["sudo","virsh","undefine",self.nombre])
     call(["rm",self.nombre + ".xml"])
     call(["rm",self.nombre + ".qcow2"])
 
