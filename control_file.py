@@ -120,3 +120,34 @@ def control_change_state(nombre, state):
 
 # #########################################################################
 # #########################################################################
+
+# maquinas = ["lb","c1","s1"]
+
+def monitor(maquinas):
+    # Cliente
+    print("##### Cliente #####")
+    state = "NO EXISTE"
+    if control_search("c1"):
+        if control_state("c1","0"):
+            state = "Parada"
+        if control_state("c1","1"):
+            state = "Arrancada"
+
+
+    print(f"\tc1:  {state}")
+
+    print("")
+    
+    # Router
+    print("##### Router #####")
+    
+
+
+    print("")
+    # Servidores
+    print("##### Servidores #####")
+    
+    
+    
+# 
+#monitor(maquinas)

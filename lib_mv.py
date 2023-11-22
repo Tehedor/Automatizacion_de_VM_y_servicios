@@ -1,8 +1,8 @@
 import logging
-from subprocess import call,run
+from subprocess import call,run, Popen
 from lxml import etree
 import getpass
-from config_files import editar_xml,crear_fiche
+from config_files import editar_xml,crear_fiche,configurar_proxy
 
 log = logging.getLogger('auto_p2')
 
@@ -82,8 +82,13 @@ class MV:
       call(["rm","index.html"])
     
     # Ruter
-    # if router:
-    #   call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
+    if router:
+      call(["cp","haproxy","haproxy.cfg"])
+      #call(["sudo","virt-cat","-a",self.nombre + ".qcow2","/etc/haproxy/haproxy.cfg",">","haproxy.cfg"])
+      configurar_proxy(self)
+      call(["sudo", "virt-copy-in", "-a", self.nombre + ".qcow2", "/etc/hosts", "-e", "haproxy.cfg"])
+      call(["rm","haproxy.cfg"])
+      # call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
     #   call(["rm","haproxy.cfg"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/"])
@@ -113,18 +118,18 @@ class MV:
     # Mostrar consola
     # call(["xterm","-e","sudo","virsh","console",self.nombre])
     # Mostrar la consola sin que se dentenga el prgrama, mostrando de esta manera todas la consolas a la vez
-    run(["xterm","-e","sudo","virsh","console",self.nombre])
+    Popen(["xterm","-e","sudo","virsh","console",self.nombre])
   def parar_mv (self):
     log.debug("parar_mv " + self.nombre)
 
     #  Detener las maquinas virutales con virsh shutdown
-    call(["sudo","virsh","shutdown",self.nombre]) #Apagar la consola de manera suave
+    call(["sudo","virsh","shutdown",self.nombre]) #Parar la mauqiin de manera suave
 
 
   def liberar_mv (self):
     log.debug("liberar_mv " + self.nombre)
     # Liberar MV
-    call(["sudo","virsh","destroy",self.nombre])  #Apagar la consola de manera brusca
+    call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
     call(["sudo","virsh","undefine",self.nombre]) #Eliminar la MV
     call(["rm",self.nombre + ".xml"])
     call(["rm",self.nombre + ".qcow2"])

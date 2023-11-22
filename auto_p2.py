@@ -96,10 +96,15 @@ if second_arg == 'crear':
     
     if not control_state("LAN","1"):
         if1 = Red("LAN1")
+        
         if2 = Red("LAN2")
         if1.crear_red()
         if2.crear_red()
         control_add("LAN")
+        call(["sudo","ifconfig","LAN1","10.11.1.3/24"])
+        call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
+        #call("sudo ifconfig LAN1 10.11.1.3/24")
+        #call("sudo ip route add 10.11.0.0/16 via 10.11.1.1")
     
     for nombre_mv in next_arg:
         if not control_search(nombre_mv):
@@ -118,13 +123,13 @@ elif second_arg == 'arrancar':
     # Arrancar maquinas
     for nombre_mv in next_arg:
         if control_search(nombre_mv):
-            if control_state(nombre_mv,"0"):    
+            #if control_state(nombre_mv,"0"):    
                 nombre = MV(nombre_mv)
                 nombre.arrancar_mv() 
                 # nombre.mostrar_consola_mv()
                 control_change_state(nombre_mv,"1")
-            else:
-                print(f"Error: La maquina {nombre_mv} ya esta arrancada")
+            #else:
+            #    print(f"Error: La maquina {nombre_mv} ya esta arrancada")
         else:
             print(f"Error: La maquina {nombre_mv} no existe")
 
@@ -161,7 +166,7 @@ elif second_arg == 'liberar':
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
-        mostrar_consola_mv(nombre_mv)
+        nombre.mostrar_consola_mv()
         # run(["xterm","-e","sudo","virsh","console",nombre_mv])
 elif second_arg == 'monitor':
     run(["watch", "-n", "2", "virsh", "list", "--all"])

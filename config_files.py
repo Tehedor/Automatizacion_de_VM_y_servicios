@@ -80,6 +80,18 @@ def crear_fiche(self,ip,router):
     #         for i in range(num_server):
     #             archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
 
+def configurar_proxy(self):
+    with open ('haproxy.cfg','a') as archivo:
+            archivo.write("\nfrontend lb\n")
+            archivo.write("\tbind *:80\n")
+            archivo.write("\tmode http\n\n")
+            archivo.write("\tdefault_backend webservers\n")
+            archivo.write("backend webservers\n")
+            archivo.write("\tmode http\n")
+            archivo.write("\tbalance roundrobin\n")
+            for i in range(num_server):
+               archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
+
 
 
 # ##########################################################################
