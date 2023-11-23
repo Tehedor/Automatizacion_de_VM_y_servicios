@@ -106,6 +106,8 @@ class MV:
       configurar_proxy()
       call(["sudo", "virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg","/etc/haproxy/"])
       call(["rm","haproxy.cfg"])
+
+      call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/haproxyctl restart\n/'])
       # call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
     #   call(["rm","haproxy.cfg"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/"])
