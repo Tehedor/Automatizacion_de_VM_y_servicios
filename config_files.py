@@ -67,6 +67,9 @@ def crear_fiche(self,ip,router):
             archivo.write("<html>\n")
             archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
             archivo.write("</html>\n")
+
+        with open ('apache2.service','w') as archivo:
+            archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")    
     
     # if router:
     #     with open ('haproxy.cfg','w') as archivo:
@@ -80,7 +83,7 @@ def crear_fiche(self,ip,router):
     #         for i in range(num_server):
     #             archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
 
-def configurar_proxy(self):
+def configurar_proxy():
     with open ('haproxy.cfg','a') as archivo:
             archivo.write("\nfrontend lb\n")
             archivo.write("\tbind *:80\n")
@@ -90,7 +93,12 @@ def configurar_proxy(self):
             archivo.write("\tmode http\n")
             archivo.write("\tbalance roundrobin\n")
             for i in range(num_server):
-               archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
+               archivo.write(f"\tserver s{i+1} 10.11.2.3{i+1}:80 check\n")
+
+#configurar_proxy()
+
+def configurar_apach2(self):
+    print("hola")
 
 
 
