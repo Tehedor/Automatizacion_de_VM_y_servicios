@@ -82,8 +82,8 @@ class MV:
       call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "index.html", "/var/www/html/"])
       call(["rm","index.html"])
 
-      call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
-      call(["rm","apache2"])
+      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
+      #call(["rm","apache2"])
     
     # Ruter
     if router:
@@ -96,7 +96,7 @@ class MV:
       # call(["sudo","virt-cat","-a",self.nombre + ".qcow2","/etc/haproxy/haproxy.cfg",">","haproxy.cfg"])
       configurar_proxy()
       call(["sudo", "virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg","/etc/haproxy/"])
-      call(["rm","haproxy.cfg","haproxy"])
+      call(["rm","haproxy.cfg"])
       # call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg", "/etc/haproxy/"])
     #   call(["rm","haproxy.cfg"])
       # call(["sudo","virt-edit", "-a", self.nombre + ".qcow2", "/etc/sysctl.conf", "-e", "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/"])
