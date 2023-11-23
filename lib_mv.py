@@ -31,9 +31,9 @@ def interfaces_control(self):
     return interface
 
 # def interfaces_control(self):
-#     if self.nombre == "c1"
+#     if self.nombre == "c1":
 #         interface = ["if1"]
-#     elif self.nombre == "lb"
+#     elif self.nombre == "lb":
 #         interface = ["if1","if2"]
 #     elif self.nombre.startswith("s") and self.nombre[1:].isdigit():
 #         interface = ["if2"]
@@ -84,30 +84,12 @@ class MV:
 
       call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/apachectl start\n/'])
 
-      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
-      #call(["rm","apache2"])
-     
-      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
-      #call(["rm","apache2.service"])
-      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "mi_script_inicio.service", "/etc/systemd/system/"])
-      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "script_inicio_server.sh", "/root/"])
-      
-
-
     # Ruter
     if router:
-      #  sudo virt-copy-out -a lb.qcow2 /etc/haproxy/haproxy.cfg .
-      # call(["sudo","virt-copy-out","-a",self.nombre + ".qcow2","/etc/haproxy/haproxy.cfg","."])
-      # chmod("haproxy.cfg",0o755)
-      #call(["cp","haproxy.cfg","haproxy"])
-      #call(["sudo","rm","haproxy.cfg"])
       call(["cp","haproxy","haproxy.cfg"])
-      # call(["sudo","virt-cat","-a",self.nombre + ".qcow2","/etc/haproxy/haproxy.cfg",">","haproxy.cfg"])
       configurar_proxy()
       call(["sudo", "virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg","/etc/haproxy/"])
       call(["rm","haproxy.cfg"])
-
-      #call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/haproxy restart\n/'])
       call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/systemctl restart haproxy.service\n/'])
     
   def arrancar_mv (self):
@@ -116,13 +98,6 @@ class MV:
     # Arrancar MV
     call(["sudo","virsh","start",self.nombre])
 
-    # Balaceador de carga
-    # ##########################################################
-    # if self.nombre == "lb":
-    #   call(["service","apache2","stop"])
-    #call([])
-
-    # ##########################################################
   def mostrar_consola_mv (self):
     log.debug("mostrar_mv " + self.nombre)
     # Mostrar consola

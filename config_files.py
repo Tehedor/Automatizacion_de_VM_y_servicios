@@ -37,7 +37,7 @@ def crear_fiche(self,ip,router):
             archivo.write("\tnetmask 255.255.255.0\n\n")
             # Configuración adicional para habilitar el enrutamiento
             archivo.write("# Habilitar el enrutamiento IP\n")
-            archivo.write("up echo 1 > /proc/sys/net/ipv4/ip_forward\n")
+            # archivo.write("up echo 1 > /proc/sys/net/ipv4/ip_forward\n")
         else:
             if self.nombre.startswith("s"):
                 archivo.write("auto lo\n")
@@ -97,9 +97,9 @@ def configurar_proxy():
 
 #configurar_proxy()
 
-def configurar_apach2(self):
-    with open ('my_scripts.service','w') as archivo:
-        archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")
+# def configurar_apach2(self):
+#     with open ('my_scripts.service','w') as archivo:
+#         archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")
 
 
 

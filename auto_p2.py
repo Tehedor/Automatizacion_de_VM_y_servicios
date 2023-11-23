@@ -74,7 +74,7 @@ i=2
 if len(sys.argv) > 2:
     while i < len(sys.argv) and sys.argv[i] != " ":
         print(sys.argv[i][1:].isdigit())
-        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit()):
+        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
             print(f"maquina {sys.argv[i]} no permitida")                
         else:
             next_arg.append(sys.argv[i])
@@ -96,16 +96,21 @@ if second_arg == 'crear':
     
     if not control_state("LAN","1"):
         if1 = Red("LAN1")
-        
         if2 = Red("LAN2")
         if1.crear_red()
         if2.crear_red()
         control_add("LAN")
         call(["sudo","ifconfig","LAN1","10.11.1.3/24"])
         call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
-        #call("sudo ifconfig LAN1 10.11.1.3/24")
-        #call("sudo ip route add 10.11.0.0/16 via 10.11.1.1")
-    
+
+
+        # if1 = Red("if1")
+        # if2 = Red("if2")
+        # if1.crear_red()
+        # if2.crear_red()
+        # control_add("LAN")
+        # call(["sudo","ifconfig","if1","10.11.1.3/24"])
+        # call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
     for nombre_mv in next_arg:
         if not control_search(nombre_mv):
             nombre = MV(nombre_mv)
@@ -123,13 +128,13 @@ elif second_arg == 'arrancar':
     # Arrancar maquinas
     for nombre_mv in next_arg:
         if control_search(nombre_mv):
-            #if control_state(nombre_mv,"0"):    
+            if control_state(nombre_mv,"0"):    
                 nombre = MV(nombre_mv)
                 nombre.arrancar_mv() 
                 # nombre.mostrar_consola_mv()
                 control_change_state(nombre_mv,"1")
-            #else:
-            #    print(f"Error: La maquina {nombre_mv} ya esta arrancada")
+            else:
+               print(f"Error: La maquina {nombre_mv} ya esta arrancada")
         else:
             print(f"Error: La maquina {nombre_mv} no existe")
 
