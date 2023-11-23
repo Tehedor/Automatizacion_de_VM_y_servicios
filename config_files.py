@@ -91,6 +91,7 @@ def configurar_proxy():
             archivo.write("\tdefault_backend webservers\n")
             archivo.write("backend webservers\n")
             archivo.write("\tmode http\n")
+            
             archivo.write("\tbalance roundrobin\n")
             for i in range(num_server):
                archivo.write(f"\tserver s{i+1} 10.11.2.3{i+1}:80 check\n")
