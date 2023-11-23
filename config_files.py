@@ -98,7 +98,8 @@ def configurar_proxy():
 #configurar_proxy()
 
 def configurar_apach2(self):
-    print("hola")
+    with open ('my_scripts.service','w') as archivo:
+        archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")
 
 
 

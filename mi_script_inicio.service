@@ -1,0 +1,9 @@
+[Unit]
+Description=Script de Inicio
+
+[Service]
+Type=simple
+ExecStart=/root/script_inicio_server.sh
+
+[Install]
+WantedBy=default.target

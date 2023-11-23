@@ -82,9 +82,18 @@ class MV:
       call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "index.html", "/var/www/html/"])
       call(["rm","index.html"])
 
+      call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/apachectl start\n/'])
+
       #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
       #call(["rm","apache2"])
-    
+     
+      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "apache2.service", "/etc/systemd/system/"])
+      #call(["rm","apache2.service"])
+      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "mi_script_inicio.service", "/etc/systemd/system/"])
+      #call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "script_inicio_server.sh", "/root/"])
+      
+
+
     # Ruter
     if router:
       #  sudo virt-copy-out -a lb.qcow2 /etc/haproxy/haproxy.cfg .
