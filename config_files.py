@@ -1,7 +1,6 @@
 from lxml import etree
 import getpass
 from subprocess import call, run
-import sys, json
 
 def crear_fiche(self,ip,router):
 
@@ -43,7 +42,7 @@ def crear_fiche(self,ip,router):
 
   # Index servidores
     if self.nombre.startswith("s"):
-      # with open ('/var/www/html/index.html','w') as archivo:
+      # with open ('/var/www/html/index.html','w') as archivo: 
         i = self.nombre[1:]
         with open ('index.html','w') as archivo:
             archivo.write("<html>\n")
