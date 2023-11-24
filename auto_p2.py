@@ -28,6 +28,14 @@ if reset_file == True:
 # #########################################################################
 # #########################################################################
 
+
+
+#########################################################################
+#########################################################################
+# Main
+#########################################################################
+#########################################################################
+
 # Cargar JSON
 with open('auto_p2.json', 'r') as f:
     data = json.load(f)
@@ -55,13 +63,6 @@ def init_log():
 def pause():
     programPause = raw_input("Press the <ENTER> key to continue...")
 
-
-
-#########################################################################
-#########################################################################
-# Main
-#########################################################################
-#########################################################################
 init_log()
 
 
@@ -116,7 +117,7 @@ if second_arg == 'crear':
             nombre.crear_mv(imagen, router,num_server)
             control_add(nombre_mv)
         else:
-            print(f"Error: La maquina {nombre_mv} ya existe")
+            print(f"Error: La maquina {nombre_mv} ya existe\n")
     
 elif second_arg == 'arrancar':
 
@@ -128,9 +129,9 @@ elif second_arg == 'arrancar':
                 nombre.arrancar_mv() 
                 control_change_state(nombre_mv,"1")
             else:
-               print(f"Error: La maquina {nombre_mv} ya esta arrancada")
+               print(f"Error: La maquina {nombre_mv} ya esta arrancada\n")
         else:
-            print(f"Error: La maquina {nombre_mv} no existe")
+            print(f"Error: La maquina {nombre_mv} no existe\n")
 
 
 elif second_arg == 'parar':
@@ -141,15 +142,19 @@ elif second_arg == 'parar':
                 nombre.parar_mv()
                 control_change_state(nombre_mv,"0")
             else:
-                print(f"Error: La maquina {nombre_mv} ya esta parada")
+                print(f"Error: La maquina {nombre_mv} ya esta parada\n")
         else:
-            print(f"Error: La maquina {nombre_mv} no existe")
+            print(f"Error: La maquina {nombre_mv} no existe\n")
       
 elif second_arg == 'liberar':
+    
     for nombre_mv in next_arg:
-        nombre = MV(nombre_mv)
-        nombre.liberar_mv()
-        control_rm(nombre_mv)
+        if not control_search(nombre_mv):    
+            nombre = MV(nombre_mv)
+            nombre.liberar_mv()
+            control_rm(nombre_mv)
+        else:
+            print(f"Error: La maquina {nombre_mv} no existe\n")
    
     # Liberar redes
     with open ('control_file','r') as archivo:
@@ -167,6 +172,6 @@ elif second_arg == 'consola':
         nombre = MV(nombre_mv)
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
-    run(["watch", "-n", "2", "python3", "monitor.py"])
+    run(["watch", "-n", "0.25", "python3", "monitor.py"])
 else:
     print(f"Error: Argumento desconocido {second_arg}")

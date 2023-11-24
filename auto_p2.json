@@ -1,4 +1,4 @@
 {
-    "num_server" : 2,
-    "debug" : true
+    "num_server" : 3,
+    "debug" : false
 }
