@@ -3,7 +3,7 @@ from subprocess import call, run
 from lib_mv import MV,Red
 import logging, sys, json
 from os import path
-from control_file import control_search,control_state,control_change_state,control_add,control_rm
+from control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
 
 
 # #########################################################################
@@ -174,6 +174,6 @@ elif second_arg == 'consola':
         nombre.mostrar_consola_mv()
         # run(["xterm","-e","sudo","virsh","console",nombre_mv])
 elif second_arg == 'monitor':
-    run(["watch", "-n", "2", "virsh", "list", "--all"])
+    run(["watch", "-n", "2", "python3", "monitor.py"])
 else:
     print(f"Error: Argumento desconocido {second_arg}")

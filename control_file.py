@@ -140,14 +140,28 @@ def monitor(maquinas):
     
     # Router
     print("##### Router #####")
-    
+    state = "NO EXISTE"
+    if control_search("lb"):
+        if control_state("lb","0"):
+            state = "Parada"
+        if control_state("lb","1"):
+            state = "Arrancada"
+
+    print(f"\tlb:  {state}")
 
 
     print("")
     # Servidores
     print("##### Servidores #####")
-    
-    
-    
-# 
+    state = "NO EXISTE"
+    for mv in maquinas:
+        if mv.startswith("s"):
+            if control_search(mv):
+                if control_state(mv,"0"):
+                    state = "Parada"
+                if control_state(mv,"1"):
+                    state = "Arrancada"
+            print(f"\t{mv}:  {state}")
+
+
 #monitor(maquinas)
