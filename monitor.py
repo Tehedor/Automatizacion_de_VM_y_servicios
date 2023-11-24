@@ -14,9 +14,9 @@ def monitor():
     state = "Desconectadas"
     if control_search("LAN"):
         if control_state("LAN","1"):
-            state = "Conectadas"
+            state = " Conectadas"
             
-    print(f"   LAN1 & LAN2:  {state}")
+    print(f"  LAN1 & LAN2:  {state}")
 
     print("")
 

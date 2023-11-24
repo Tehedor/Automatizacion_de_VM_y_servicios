@@ -44,7 +44,7 @@ num_server = data['num_server']
 debug = data['debug']
 
 if len(sys.argv) < 2:
-    print("Error: No se proporcionó el segundo argumento.")
+    logging.warning("No se proporcionó el segundo argumento.")
     sys.exit(1)
 
 # Creacion y configuracion del logger
@@ -80,9 +80,9 @@ for i in range(num_server):
 i=2
 if len(sys.argv) > 2:
     while i < len(sys.argv) and sys.argv[i] != " ":
-        print(sys.argv[i][1:].isdigit())
+        # logging.warning(sys.argv[i][1:].isdigit())
         if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
-            print(f"maquina {sys.argv[i]} no permitida")                
+            logging.warning(f"maquina {sys.argv[i]} no permitida")                
         else:
             next_arg.append(sys.argv[i])
         i = i + 1
@@ -117,7 +117,7 @@ if second_arg == 'crear':
             nombre.crear_mv(imagen, router,num_server)
             control_add(nombre_mv)
         else:
-            print(f"Error: La maquina {nombre_mv} ya existe\n")
+            logging.warning(f"La maquina {nombre_mv} ya existe\n")
     
 elif second_arg == 'arrancar':
 
@@ -129,9 +129,9 @@ elif second_arg == 'arrancar':
                 nombre.arrancar_mv() 
                 control_change_state(nombre_mv,"1")
             else:
-               print(f"Error: La maquina {nombre_mv} ya esta arrancada\n")
+               logging.warning(f"La maquina {nombre_mv} ya esta arrancada\n")
         else:
-            print(f"Error: La maquina {nombre_mv} no existe\n")
+            logging.warning(f"La maquina {nombre_mv} no existe\n")
 
 
 elif second_arg == 'parar':
@@ -142,19 +142,19 @@ elif second_arg == 'parar':
                 nombre.parar_mv()
                 control_change_state(nombre_mv,"0")
             else:
-                print(f"Error: La maquina {nombre_mv} ya esta parada\n")
+                logging.warning(f"La maquina {nombre_mv} ya esta parada\n")
         else:
-            print(f"Error: La maquina {nombre_mv} no existe\n")
+            logging.warning(f"La maquina {nombre_mv} no existe\n")
       
 elif second_arg == 'liberar':
     
     for nombre_mv in next_arg:
-        if not control_search(nombre_mv):    
+        if control_search(nombre_mv):    
             nombre = MV(nombre_mv)
             nombre.liberar_mv()
             control_rm(nombre_mv)
         else:
-            print(f"Error: La maquina {nombre_mv} no existe\n")
+            logging.warning(f"La maquina {nombre_mv} no existe\n")
    
     # Liberar redes
     with open ('control_file','r') as archivo:
@@ -174,4 +174,4 @@ elif second_arg == 'consola':
 elif second_arg == 'monitor':
     run(["watch", "-n", "0.25", "python3", "monitor.py"])
 else:
-    print(f"Error: Argumento desconocido {second_arg}")
+    logging.warning(f"Argumento desconocido {second_arg}")

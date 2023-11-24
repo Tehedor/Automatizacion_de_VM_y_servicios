@@ -4,6 +4,7 @@ from lxml import etree
 import getpass
 from config_files import editar_xml,crear_fiche,configurar_proxy
 from os import chmod
+from control_file import control_state
 
 log = logging.getLogger('auto_p2')
 
@@ -102,7 +103,8 @@ class MV:
 
   def liberar_mv (self):
     log.debug("liberar_mv " + self.nombre)
-    call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
+    if control_state(self.nombre,"1"):
+      call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
     call(["sudo","virsh","undefine",self.nombre]) #Eliminar la MV
     call(["rm",self.nombre + ".xml"])
     call(["rm",self.nombre + ".qcow2"])
