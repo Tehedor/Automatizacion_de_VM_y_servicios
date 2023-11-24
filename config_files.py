@@ -1,27 +1,9 @@
-# import logging
-# from subprocess import call,run
-
-
 from lxml import etree
 import getpass
 from subprocess import call, run
 import sys, json
-# import logging, sys, json
-
-# #########################################################################
-# #########################################################################
-with open('auto_p2.json', 'r') as f:
-    data = json.load(f)
-
-
-num_server = data['num_server']
-
-
-# #########################################################################
-# #########################################################################
 
 def crear_fiche(self,ip,router):
-
 
     with open ('interfaces','w') as archivo:
         if router == True:
@@ -37,7 +19,7 @@ def crear_fiche(self,ip,router):
             archivo.write("\tnetmask 255.255.255.0\n\n")
             # Configuración adicional para habilitar el enrutamiento
             archivo.write("# Habilitar el enrutamiento IP\n")
-            # archivo.write("up echo 1 > /proc/sys/net/ipv4/ip_forward\n")
+            archivo.write("up echo 1 > /proc/sys/net/ipv4/ip_forward\n")
         else:
             if self.nombre.startswith("s"):
                 archivo.write("auto lo\n")
@@ -71,19 +53,8 @@ def crear_fiche(self,ip,router):
         with open ('apache2.service','w') as archivo:
             archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")    
     
-    # if router:
-    #     with open ('haproxy.cfg','w') as archivo:
-    #         archivo.write("frontend lb\n")
-    #         archivo.write("\tbind *:80\n")
-    #         archivo.write("\tmode http\n\n")
-    #         archivo.write("\tdefault_backendwebservers\n")
-    #         archivo.write("backend webservers\n")
-    #         archivo.write("\tmode http\n")
-    #         archivo.write("\tbalance roundrobin\n")
-    #         for i in range(num_server):
-    #             archivo.write(f"\tserver s{i+1} 10.11.2.1.3{i+1}:80 check\n")
 
-def configurar_proxy():
+def configurar_proxy(num_server):
     with open ('haproxy.cfg','a') as archivo:
             archivo.write("\nfrontend lb\n")
             archivo.write("\tbind *:80\n")
@@ -96,24 +67,13 @@ def configurar_proxy():
             for i in range(num_server):
                archivo.write(f"\tserver s{i+1} 10.11.2.3{i+1}:80 check\n")
 
-#configurar_proxy()
-
-# def configurar_apach2(self):
-#     with open ('my_scripts.service','w') as archivo:
-#         archivo.write("[Service]\nExecStart=/usr/sbin/apache2 -k start")
-
-
 
 # ##########################################################################
-# Configuración del xml
+# Configuración del XML
 # ##########################################################################
 # Editar XML
 def editar_xml(self,router,interface_red):
     user = getpass.getuser()
-
-    # interface_red = interfaces_control(self)
-    # ip_red = ip_control(self)
-
     tree = etree.parse(self.nombre + ".xml")
     root = tree.getroot()
     name = root.find('name')

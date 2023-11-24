@@ -1,8 +1,4 @@
 from subprocess import call
-# from lxml import etree
-# import getpass
-# import logging, sys, json
-
 
 # #########################################################################
 # Control de máquinas y red
@@ -44,7 +40,6 @@ def control_add(name):
 
     
 def control_rm(nombre):
-    # etc/apache2/sites-available/argumento.conf
     call(["mv","control_file","control_file_copia"])
     file = open("control_file" ,"w")
     copia = open("control_file_copia","r")
@@ -84,7 +79,6 @@ def control_state(nombre, state):
                         return False
     return False
 
-# def control_state_mac(nombre, state):
 def control_change_state(nombre, state):
     call(["cp","control_file","control_file_copia"])
 
@@ -93,9 +87,7 @@ def control_change_state(nombre, state):
     copia = open("control_file_copia" ,"r")
     
     file = open("control_file","w") 
-
    
-    # cambios = False    
     for line in copia:
         c = 0
         if exite == True:
@@ -106,22 +98,16 @@ def control_change_state(nombre, state):
                     line = "\t" + palabras[0] + palabras[1] + "\n"
                     file.write(line)
                     c = 1
-                    # cambios = True
         if c == 0: 
             file.write(line)
-                # return True
             
     file.close()
     copia.close()
     call(["rm","control_file_copia"])
-    # return True
-    # return cambios
 
 
 # #########################################################################
 # #########################################################################
-
-# maquinas = ["lb","c1","s1"]
 
 def monitor(maquinas):
     # Cliente
@@ -132,7 +118,6 @@ def monitor(maquinas):
             state = "Parada"
         if control_state("c1","1"):
             state = "Arrancada"
-
 
     print(f"\tc1:  {state}")
 
@@ -149,7 +134,6 @@ def monitor(maquinas):
 
     print(f"\tlb:  {state}")
 
-
     print("")
     # Servidores
     print("##### Servidores #####")
@@ -162,6 +146,3 @@ def monitor(maquinas):
                 if control_state(mv,"1"):
                     state = "Arrancada"
             print(f"\t{mv}:  {state}")
-
-
-#monitor(maquinas)

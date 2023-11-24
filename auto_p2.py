@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from subprocess import call, run
 from lib_mv import MV,Red
 import logging, sys, json
@@ -28,21 +28,23 @@ if reset_file == True:
 # #########################################################################
 # #########################################################################
 
+# Cargar JSON
 with open('auto_p2.json', 'r') as f:
     data = json.load(f)
 
-
 num_server = data['num_server']
-# debug = data['debug']
+debug = data['debug']
 
 if len(sys.argv) < 2:
     print("Error: No se proporcionó el segundo argumento.")
     sys.exit(1)
 
-
+# Creacion y configuracion del logger
 def init_log():
-    # Creacion y configuracion del logger
-    logging.basicConfig(level=logging.DEBUG)
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
     log = logging.getLogger('auto_p2')
     ch = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', "%Y-%m-%d %H:%M:%S")
@@ -53,10 +55,14 @@ def init_log():
 def pause():
     programPause = raw_input("Press the <ENTER> key to continue...")
 
-# Main
-init_log()
-print('CDPS - mensaje info1')
 
+
+#########################################################################
+#########################################################################
+# Main
+#########################################################################
+#########################################################################
+init_log()
 
 
 # #########################################################################
@@ -85,11 +91,8 @@ else:
 
 
 # #########################################################################
-# #########################################################################
 # Aplicacion
 # #########################################################################
-# #########################################################################
-
 
 if second_arg == 'crear':
     imagen = "cdps-vm-base-pc1.qcow2"   
@@ -104,21 +107,13 @@ if second_arg == 'crear':
         call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
 
 
-        # if1 = Red("if1")
-        # if2 = Red("if2")
-        # if1.crear_red()
-        # if2.crear_red()
-        # control_add("LAN")
-        # call(["sudo","ifconfig","if1","10.11.1.3/24"])
-        # call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
     for nombre_mv in next_arg:
         if not control_search(nombre_mv):
             nombre = MV(nombre_mv)
             router = False
             if nombre_mv == "lb":
                 router = True
-            nombre.crear_mv(imagen, router)
-            # nombre.crear_mv(imagen,interface_red, router)
+            nombre.crear_mv(imagen, router,num_server)
             control_add(nombre_mv)
         else:
             print(f"Error: La maquina {nombre_mv} ya existe")
@@ -131,7 +126,6 @@ elif second_arg == 'arrancar':
             if control_state(nombre_mv,"0"):    
                 nombre = MV(nombre_mv)
                 nombre.arrancar_mv() 
-                # nombre.mostrar_consola_mv()
                 control_change_state(nombre_mv,"1")
             else:
                print(f"Error: La maquina {nombre_mv} ya esta arrancada")
@@ -172,7 +166,6 @@ elif second_arg == 'consola':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
         nombre.mostrar_consola_mv()
-        # run(["xterm","-e","sudo","virsh","console",nombre_mv])
 elif second_arg == 'monitor':
     run(["watch", "-n", "2", "python3", "monitor.py"])
 else:
