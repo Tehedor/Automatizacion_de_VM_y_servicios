@@ -4,7 +4,7 @@ from lib_mv import MV,Red
 import logging, sys, json
 from os import path
 from control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
-
+import time
 
 # #########################################################################
 # Creación control_file
@@ -78,19 +78,21 @@ for i in range(num_server):
     all_vm.append("s" + str(i+1)) 
 
 i=2
-if len(sys.argv) > 2:
-    while i < len(sys.argv) and sys.argv[i] != " ":
-        # logging.warning(sys.argv[i][1:].isdigit())
-        if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
-            logging.warning(f"maquina {sys.argv[i]} no permitida")                
-        else:
-            next_arg.append(sys.argv[i])
-        i = i + 1
+if num_server <= 5:
+    if len(sys.argv) > 2:
+        while i < len(sys.argv) and sys.argv[i] != " ":
+            # logging.warning(sys.argv[i][1:].isdigit())
+            if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
+                logging.warning(f"maquina {sys.argv[i]} no permitida")                
+            else:
+                next_arg.append(sys.argv[i])
+            i = i + 1
+    else:
+        next_arg = all_vm
 else:
-    next_arg = all_vm
-
-
-
+    print("")
+    logging.error("No se puede crear mas de 5 servidores")
+    print("")
 # #########################################################################
 # Aplicacion
 # #########################################################################
@@ -145,7 +147,10 @@ elif second_arg == 'parar':
                 logging.warning(f"La maquina {nombre_mv} ya esta parada\n")
         else:
             logging.warning(f"La maquina {nombre_mv} no existe\n")
-      
+    
+    time.sleep(5)
+    
+
 elif second_arg == 'liberar':
     
     for nombre_mv in next_arg:
