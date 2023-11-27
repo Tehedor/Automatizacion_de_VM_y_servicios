@@ -109,6 +109,9 @@ class MV:
     call(["rm",self.nombre + ".xml"])
     call(["rm",self.nombre + ".qcow2"])
 
+  def monitorizar_mv (self):
+    call(["watch","-n","0.25","sudo","virsh","dominfo",self.nombre])
+
 class Red:
   def __init__(self, nombre):
     self.nombre = nombre

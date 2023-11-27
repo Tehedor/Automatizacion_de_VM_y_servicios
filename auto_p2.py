@@ -69,6 +69,27 @@ init_log()
 # #########################################################################
 # Argumentos
 # #########################################################################
+if len(sys.argv) < 2 or sys.argv[1] == '--help':
+    print("""
+    Uso: auto_p2.py [opcion] mv1 mv2 ... mvx
+
+    Opcion:
+        crear: Crea una nueva máquina virtual o red.
+        arrancar: Inicia una máquina virtual o red existente.
+        parar: Detiene una máquina virtual o red existente.
+        liberar: Libera una máquina virtual o red existente.
+        consola: Muestra la consola de una máquina virtual existente.
+        monitor: Inicia el monitor de todas las máquinas virtuales.
+        monitor_mv: Inicia el monitor de cada máquina virtual
+
+    Argumento 2...N:
+        mv1 mv2 ... mvx: Nombre de la máquina virtual o red a crear, arrancar, parar, liberar o mostrar la consola.
+        Si no pones nada hará el proceso de operación con todas las máquinas virtuales especificadas en el fichero auto_p2.json
+    
+    """)
+    sys.exit(0)
+
+
 second_arg = sys.argv[1]
 
 next_arg = []
@@ -178,5 +199,9 @@ elif second_arg == 'consola':
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
     run(["watch", "-n", "0.25", "python3", "monitor.py"])
+elif second_arg == 'monitor_mv':
+    for nombre_mv in next_arg:
+        nombre = MV(nombre_mv)
+        nombre.monitorizar_mv()
 else:
     logging.warning(f"Argumento desconocido {second_arg}")
