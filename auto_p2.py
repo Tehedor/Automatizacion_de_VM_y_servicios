@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 from subprocess import call, run
-from lib_mv import MV,Red
+from files_auto/lib_mv import MV,Red
 import logging, sys, json
 from os import path
-from control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
+from files_auto/control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
 import time
 
 # #########################################################################
 # Creación control_file
 # #########################################################################
 reset_file = False
-if path.exists("control_file") == False:
+if path.exists("files_auto/control_file") == False:
     reset_file = True
 else:
-    with open ('control_file','r') as archivo:
+    with open ('files_auto/control_file','r') as archivo:
         n_lines = len(archivo.readlines())
     if n_lines < 5:
         reset_file = True
           
 
 if reset_file == True:
-    with open ('control_file','w') as archivo:
+    with open ('files_auto/control_file','w') as archivo:
         archivo.write("#### RED #### 0 -> no lan; 1 -> hay LAN\n")
         archivo.write("\tLAN\t0\n")
         archivo.write("\n#### MAQUINAS VIRTUALES #### 0 -> parada; 1 -> arrancada\n\n")  
@@ -80,7 +80,7 @@ if len(sys.argv) < 2 or sys.argv[1] == '--help':
         liberar: Libera una máquina virtual o red existente.
         consola: Muestra la consola de una máquina virtual existente.
         monitor: Inicia el monitor de todas las máquinas virtuales.
-        monitor_mv: Inicia el monitor de cada máquina virtual
+        info: Muestr info de cada máquina virtual
 
     Argumento 2...N:
         mv1 mv2 ... mvx: Nombre de la máquina virtual o red a crear, arrancar, parar, liberar o mostrar la consola.
@@ -119,7 +119,7 @@ else:
 # #########################################################################
 
 if second_arg == 'crear':
-    imagen = "cdps-vm-base-pc1.qcow2"   
+    imagen = "maquinas/cdps-vm-base-pc1.qcow2"   
     
     if not control_state("LAN","1"):
         if1 = Red("LAN1")
@@ -183,7 +183,7 @@ elif second_arg == 'liberar':
             logging.warning(f"La maquina {nombre_mv} no existe\n")
    
     # Liberar redes
-    with open ('control_file','r') as archivo:
+    with open ('files_auto/control_file','r') as archivo:
         n_lines = len(archivo.readlines())
 
     if n_lines < 6:
@@ -199,7 +199,7 @@ elif second_arg == 'consola':
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
     run(["watch", "-n", "0.25", "python3", "monitor.py"])
-elif second_arg == 'monitor_mv':
+elif second_arg == 'info':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
         nombre.monitorizar_mv()

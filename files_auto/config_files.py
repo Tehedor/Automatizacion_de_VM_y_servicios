@@ -41,33 +41,33 @@ def crear_fiche(self,ip,router):
         archivo.write(self.nombre)
 
   # Index servidores
-    # if self.nombre.startswith("s"):
-    #     i = self.nombre[1:]
-    #     with open ('index.html','w') as archivo:
-    #         archivo.write("<html>\n")
-    #         archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
-    #         archivo.write("</html>\n")
-
     if self.nombre.startswith("s"):
         i = self.nombre[1:]
-        color = "#FFFF00 "
-        if i == "1":
-            color="#FF0000"
-        elif i == "2":
-            color = "#008000"
-            
-
         with open ('index.html','w') as archivo:
             archivo.write("<html>\n")
-            archivo.write("<head>\n")
-            archivo.write("\t<style>\n")
-            archivo.write(f"\t\tbody {{background-color: {color};}}\n")  # Cambia el color según tus necesidades
-            archivo.write("\t</style>\n")
-            archivo.write("</head>\n")
-            archivo.write("<body>\n")
             archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
-            archivo.write("</body>\n")
             archivo.write("</html>\n")
+
+    # if self.nombre.startswith("s"):
+    #     i = self.nombre[1:]
+    #     color = "#FFFF00 "
+    #     if i == "1":
+    #         color="#FF0000"
+    #     elif i == "2":
+    #         color = "#008000"
+            
+
+    #     with open ('index.html','w') as archivo:
+    #         archivo.write("<html>\n")
+    #         archivo.write("<head>\n")
+    #         archivo.write("\t<style>\n")
+    #         archivo.write(f"\t\tbody {{background-color: {color};}}\n")  # Cambia el color según tus necesidades
+    #         archivo.write("\t</style>\n")
+    #         archivo.write("</head>\n")
+    #         archivo.write("<body>\n")
+    #         archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
+    #         archivo.write("</body>\n")
+    #         archivo.write("</html>\n")
             
 def configurar_proxy(num_server):
     with open ('haproxy.cfg','a') as archivo:
@@ -94,7 +94,7 @@ def editar_xml(self,router,interface_red):
     name = root.find('name')
     name.text = self.nombre
     source = root.find('.//devices/disk/source')
-    source.set('file', '/mnt/tmp/' + user + '/' + self.nombre + '.qcow2')
+    source.set('file', '/mnt/tmp/' + user + '/maquinas/' + self.nombre + '.qcow2')
     devices = root.find('.//devices')
     if router == True:
         # Interfaz 1
