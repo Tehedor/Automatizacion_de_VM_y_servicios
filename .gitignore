@@ -1,5 +1,7 @@
 *.qcow2
+/maquinas/*.qcow2
 *.xml
 *.vscode
 control_file
+/files_auto/control_file
 __pycache__
