@@ -4,6 +4,7 @@ from files_auto/lib_mv import MV,Red
 import logging, sys, json
 from os import path
 from files_auto/control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
+from files_auto/cpu_stats import cpu_stats
 import time
 
 # #########################################################################
@@ -81,6 +82,7 @@ if len(sys.argv) < 2 or sys.argv[1] == '--help':
         consola: Muestra la consola de una máquina virtual existente.
         monitor: Inicia el monitor de todas las máquinas virtuales.
         info: Muestr info de cada máquina virtual
+        cpu_stats: Muestra el estado de las cpu de cada máquina
 
     Argumento 2...N:
         mv1 mv2 ... mvx: Nombre de la máquina virtual o red a crear, arrancar, parar, liberar o mostrar la consola.
@@ -199,6 +201,10 @@ elif second_arg == 'consola':
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
     run(["watch", "-n", "0.25", "python3", "monitor.py"])
+
+elif second_arg == 'cpu_stats'
+    run(["watch", "-n", "0.25", "python3", "cpu_stats.py"])    
+
 elif second_arg == 'info':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
