@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from subprocess import call, run
+from subprocess import call
 from files_auto.lib_mv import MV,Red
 import logging, sys, json
 from os import path
@@ -219,10 +219,10 @@ elif second_arg == 'consola':
         nombre = MV(nombre_mv)
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
-    run(["watch", "-n", "0.25", "python3", "files_auto/monitor.py"])
+    call(["watch", "-n", "0.25", "python3", "files_auto/monitor.py"])
 
 elif second_arg == 'cpu_stats':
-    run(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
+    call(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
 
 elif second_arg == 'info':
     for nombre_mv in next_arg:
