@@ -2,9 +2,8 @@ import logging
 from subprocess import call,run, Popen
 from lxml import etree
 import getpass
-from config_files import editar_xml,crear_fiche,configurar_proxy
-from os import chmod
-from control_file import control_state
+from files_auto.config_files import editar_xml,crear_fiche,configurar_proxy
+from files_auto.control_file import control_state
 
 log = logging.getLogger('auto_p2')
 
@@ -46,42 +45,47 @@ class MV:
     interface_red = interfaces_control(self)
     ip_red = ip_control(self)
 
-
+    ruta_maquina = "maquinas/" + self.nombre
     # # Creación de MV
-    call(["qemu-img","create","-f","qcow2","-b",imagen,self.nombre+".qcow2"])
+    # imagen = "maquinas/" + imagen
+
+    print(imagen)
+    print(ruta_maquina)
+
+    call(["qemu-img","create","-f","qcow2","-b",imagen,ruta_maquina + ".qcow2"])
     # Creacion de XML
-    call(["cp","plantilla-vm-pc1.xml",self.nombre + ".xml"])
+    call(["cp","maquinas/plantilla-vm-pc1.xml",ruta_maquina + ".xml"])
     
     # Modificar XML
     editar_xml(self,router,interface_red)
 
     # call(["HOME=/mnt/tmp", "sudo" ,"virt-manager"])
-    call(["sudo","virsh","define",self.nombre + ".xml"])
+    call(["sudo","virsh","define",ruta_maquina + ".xml"])
 
 # ##########################################################################
 # Configuración Ficheros Internos
 # ##########################################################################
 
     crear_fiche(self,ip_red,router)
-    call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "hostname", "/etc/"])
-    call(["rm","hostname"])
-    call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "interfaces", "/etc/network/"])
-    call(["rm","interfaces"])
-    call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/hosts", "-e", f"s/127.0.1.1.*/127.0.1.1 {self.nombre}/"])
+    call(["sudo","virt-copy-in", "-a", ruta_maquina+ ".qcow2", "files_auto/hostname", "/etc/"])
+    call(["rm","files_auto/hostname"])
+    call(["sudo","virt-copy-in", "-a", ruta_maquina + ".qcow2", "files_auto/interfaces", "/etc/network/"])
+    call(["rm","files_auto/interfaces"])
+    call(["sudo", "virt-edit", "-a", ruta_maquina + ".qcow2", "/etc/hosts", "-e", f"s/127.0.1.1.*/127.0.1.1 {self.nombre}/"])
 
     # Servidores
     if self.nombre.startswith("s"):
-      call(["sudo","virt-copy-in", "-a", self.nombre + ".qcow2", "index.html", "/var/www/html/"])
-      call(["rm","index.html"])
-      call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/apachectl start\n/'])
+      call(["sudo","virt-copy-in", "-a", ruta_maquina + ".qcow2", "files_auto/index.html", "/var/www/html/"])
+      call(["rm","files_auto/index.html"])
+      call(["sudo", "virt-edit", "-a", ruta_maquina + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/apachectl start\n/'])
 
     # Router
     if router:
-      call(["cp","haproxy","haproxy.cfg"])
+      call(["cp","files_auto/haproxy","files_auto/haproxy.cfg"])
       configurar_proxy(num_server)
-      call(["sudo", "virt-copy-in", "-a", self.nombre + ".qcow2", "haproxy.cfg","/etc/haproxy/"])
-      call(["rm","haproxy.cfg"])
-      call(["sudo", "virt-edit", "-a", self.nombre + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/systemctl restart haproxy.service\n/'])
+      call(["sudo", "virt-copy-in", "-a", ruta_maquina + ".qcow2", "files_auto/haproxy.cfg","/etc/haproxy/"])
+      call(["rm","files_auto/haproxy.cfg"])
+      call(["sudo", "virt-edit", "-a", ruta_maquina + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/systemctl restart haproxy.service\n/'])
 
 # ##########################################################################
 # ##########################################################################
@@ -106,8 +110,9 @@ class MV:
     if control_state(self.nombre,"1"):
       call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
     call(["sudo","virsh","undefine",self.nombre]) #Eliminar la MV
-    call(["rm",self.nombre + ".xml"])
-    call(["rm",self.nombre + ".qcow2"])
+    ruta_maquina = "maquinas/" + self.nombre
+    call(["rm",ruta_maquina + ".xml"])
+    call(["rm",ruta_maquina + ".qcow2"])
 
   def monitorizar_mv (self):
     call(["watch","-n","0.25","sudo","virsh","dominfo",self.nombre])

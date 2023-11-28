@@ -1,10 +1,9 @@
 from lxml import etree
 import getpass
-from subprocess import call, run
 
 def crear_fiche(self,ip,router):
 
-    with open ('interfaces','w') as archivo:
+    with open ('files_auto/interfaces','w') as archivo:
         if router == True:
             archivo.write("auto lo\n")
             archivo.write("iface lo inet loopback\n\n")
@@ -37,19 +36,19 @@ def crear_fiche(self,ip,router):
                 archivo.write("\tnetmask 255.255.255.0\n")
                 archivo.write("\tgateway 10.11.1.1\n")
 
-    with open ('hostname','w') as archivo:
+    with open ('files_auto/hostname','w') as archivo:
         archivo.write(self.nombre)
 
   # Index servidores
     if self.nombre.startswith("s"):
         i = self.nombre[1:]
-        with open ('index.html','w') as archivo:
+        with open ('files_auto/index.html','w') as archivo:
             archivo.write("<html>\n")
             archivo.write(f"\t<h1>Servidor s{i}</h1>\n")
             archivo.write("</html>\n")
 
-    # if self.nombre.startswith("s"):
-    #     i = self.nombre[1:]
+    # if ruta.startswith("s"):
+    #     i = ruta[1:]
     #     color = "#FFFF00 "
     #     if i == "1":
     #         color="#FF0000"
@@ -70,7 +69,7 @@ def crear_fiche(self,ip,router):
     #         archivo.write("</html>\n")
             
 def configurar_proxy(num_server):
-    with open ('haproxy.cfg','a') as archivo:
+    with open ('files_auto/haproxy.cfg','a') as archivo:
             archivo.write("\nfrontend lb\n")
             archivo.write("\tbind *:80\n")
             archivo.write("\tmode http\n\n")
@@ -88,13 +87,15 @@ def configurar_proxy(num_server):
 # ##########################################################################
 # Editar XML
 def editar_xml(self,router,interface_red):
+    ruta = "maquinas/" + self.nombre
+
     user = getpass.getuser()
-    tree = etree.parse(self.nombre + ".xml")
+    tree = etree.parse(ruta + ".xml")
     root = tree.getroot()
     name = root.find('name')
     name.text = self.nombre
     source = root.find('.//devices/disk/source')
-    source.set('file', '/mnt/tmp/' + user + '/maquinas/' + self.nombre + '.qcow2')
+    source.set('file', '/mnt/tmp/' + user + ruta + '.qcow2')
     devices = root.find('.//devices')
     if router == True:
         # Interfaz 1
@@ -114,6 +115,6 @@ def editar_xml(self,router,interface_red):
     else:
         source = devices.find('interface/source')
         source.set('bridge', interface_red[0])
-        tree.write(self.nombre + ".xml")
+        tree.write(ruta + ".xml")
 
-    tree.write(self.nombre + ".xml")
+    tree.write(ruta + ".xml")

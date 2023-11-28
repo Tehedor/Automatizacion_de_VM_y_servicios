@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from subprocess import call, run
-from files_auto/lib_mv import MV,Red
+from files_auto.lib_mv import MV,Red
 import logging, sys, json
 from os import path
-from files_auto/control_file import control_search,control_state,control_change_state,control_add,control_rm,monitor
-from files_auto/cpu_stats import cpu_stats
+from files_auto.control_file import control_search,control_state,control_change_state,control_add,control_rm
+# from files_auto.cpu_stats import cpu_stats
 import time
 
 # #########################################################################
@@ -121,7 +121,7 @@ else:
 # #########################################################################
 
 if second_arg == 'crear':
-    imagen = "maquinas/cdps-vm-base-pc1.qcow2"   
+    imagen = "cdps-vm-base-pc1.qcow2"   
     
     if not control_state("LAN","1"):
         if1 = Red("LAN1")
@@ -189,21 +189,22 @@ elif second_arg == 'liberar':
         n_lines = len(archivo.readlines())
 
     if n_lines < 6:
-        if1 = Red("LAN1")
-        if2 = Red("LAN2")
-        if1.liberar_red()
-        if2.liberar_red()
-        control_rm("LAN")
+        if control_state("LAN","1"):
+            if1 = Red("LAN1")
+            if2 = Red("LAN2")
+            if1.liberar_red()
+            if2.liberar_red()
+            control_rm("LAN")
 
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
         nombre = MV(nombre_mv)
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
-    run(["watch", "-n", "0.25", "python3", "monitor.py"])
+    run(["watch", "-n", "0.25", "python3", "files_atuo/monitor.py"])
 
-elif second_arg == 'cpu_stats'
-    run(["watch", "-n", "0.25", "python3", "cpu_stats.py"])    
+elif second_arg == 'cpu_stats':
+    run(["watch", "-n", "0.25", "python3", "files_atuo/cpu_stats.py"])    
 
 elif second_arg == 'info':
     for nombre_mv in next_arg:

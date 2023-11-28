@@ -5,9 +5,9 @@ from subprocess import call
 # #########################################################################
 
 def control_add(name):
-    call(["cp","control_file","control_file_copia"])
-    copia = open("control_file_copia","r")
-    file = open("control_file" ,"w")
+    call(["cp","files_auto/control_file","files_auto/control_file_copia"])
+    copia = open("files_auto/control_file_copia","r")
+    file = open("files_auto/control_file" ,"w")
 
 
     # print(red)
@@ -36,13 +36,13 @@ def control_add(name):
 
     file.close()
     copia.close()
-    call(["rm","control_file_copia"])
+    call(["rm","files_auto/control_file_copia"])
 
     
 def control_rm(nombre):
-    call(["mv","control_file","control_file_copia"])
-    file = open("control_file" ,"w")
-    copia = open("control_file_copia","r")
+    call(["mv","files_auto/control_file","files_auto/control_file_copia"])
+    file = open("files_auto/control_file" ,"w")
+    copia = open("files_auto/control_file_copia","r")
     
     if nombre == "LAN":
         for i,line in enumerate(copia):
@@ -57,10 +57,10 @@ def control_rm(nombre):
 
     file.close()
     copia.close()
-    call(["rm","control_file_copia"])
+    call(["rm","files_auto/control_file_copia"])
 
 def control_search(nombre):
-    with open("control_file","r") as file:
+    with open("files_auto/control_file","r") as file:
         for line in file:
             palabras = line.split()
             if nombre in palabras:
@@ -68,7 +68,7 @@ def control_search(nombre):
     return False
 
 def control_state(nombre, state):
-    with open("control_file","r") as file:
+    with open("files_auto/control_file","r") as file:
         for line in file:
             palabras = line.split()            
             if line.strip() != "":
@@ -80,13 +80,13 @@ def control_state(nombre, state):
     return False
 
 def control_change_state(nombre, state):
-    call(["cp","control_file","control_file_copia"])
+    call(["cp","cfiles_auto/ontrol_file","files_auto/control_file_copia"])
 
     exite = control_search(nombre)
 
-    copia = open("control_file_copia" ,"r")
+    copia = open("files_auto/control_file_copia" ,"r")
     
-    file = open("control_file","w") 
+    file = open("files_auto/control_file","w") 
    
     for line in copia:
         c = 0
@@ -103,7 +103,7 @@ def control_change_state(nombre, state):
             
     file.close()
     copia.close()
-    call(["rm","control_file_copia"])
+    call(["rm","files_auto/control_file_copia"])
 
 
 # #########################################################################
