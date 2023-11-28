@@ -115,7 +115,7 @@ class MV:
     call(["rm",ruta_maquina + ".qcow2"])
 
   def monitorizar_mv (self):
-    call(["watch","-n","0.25","sudo","virsh","dominfo",self.nombre])
+    call(["sudo","virsh","dominfo",self.nombre])
     
 class Red:
   def __init__(self, nombre):

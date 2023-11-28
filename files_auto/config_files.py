@@ -95,7 +95,7 @@ def editar_xml(self,router,interface_red):
     name = root.find('name')
     name.text = self.nombre
     source = root.find('.//devices/disk/source')
-    source.set('file', '/mnt/tmp/' + user + ruta + '.qcow2')
+    source.set('file', '/mnt/tmp/' + user + "/" + ruta + '.qcow2')
     devices = root.find('.//devices')
     if router == True:
         # Interfaz 1

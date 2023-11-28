@@ -14,7 +14,7 @@ if path.exists("maquinas") == False:
     call(["mkdir","maquinas"])
 if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
     call(["cp","/lab/cdps/pc1/cdps-vm-base-pc1.qcow2","./maquinas"])
-if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
+if path.exists("maquinas/plantilla-vm-pc1.xml") == False:
     call(["cp","/lab/cdps/pc1/plantilla-vm-pc1.xml","./maquinas"])
 # #########################################################################
 # #########################################################################
@@ -122,7 +122,8 @@ if num_server <= 5:
         while i < len(sys.argv) and sys.argv[i] != " ":
             # logging.warning(sys.argv[i][1:].isdigit())
             if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
-                logging.warning(f"maquina {sys.argv[i]} no permitida")                
+                print("")
+                logging.warning(f" Maquina {sys.argv[i]} no permitida\n")                
             else:
                 next_arg.append(sys.argv[i])
             i = i + 1
@@ -221,10 +222,17 @@ elif second_arg == 'monitor':
 
 elif second_arg == 'cpu_stats':
     run(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
+    # run(["python3", "files_auto/cpu_stats.py"])    
 
 elif second_arg == 'info':
     for nombre_mv in next_arg:
-        nombre = MV(nombre_mv)
-        nombre.monitorizar_mv()
+        if control_search(nombre_mv):
+            if control_state(nombre_mv, "1"):
+                nombre = MV(nombre_mv)
+                nombre.monitorizar_mv()
+            else:
+                logging.warning(f"La maquina {nombre_mv} no esta arrancada\n")
+        else:
+            logging.warning(f" La maquina {nombre_mv} no existe\n")
 else:
     logging.warning(f"Argumento desconocido {second_arg}")

@@ -80,7 +80,7 @@ def control_state(nombre, state):
     return False
 
 def control_change_state(nombre, state):
-    call(["cp","cfiles_auto/ontrol_file","files_auto/control_file_copia"])
+    call(["cp","files_auto/control_file","files_auto/control_file_copia"])
 
     exite = control_search(nombre)
 
