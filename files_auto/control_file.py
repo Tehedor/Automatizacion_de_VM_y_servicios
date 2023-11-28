@@ -29,7 +29,6 @@ def control_add(name):
                 else:
                     file.write("\t"+ name + "\t0\n")
                 hecho = 1
-                misma_linea = False
                 rellenar = False
             
         file.write(line)

@@ -4,7 +4,6 @@ from files_auto.lib_mv import MV,Red
 import logging, sys, json
 from os import path
 from files_auto.control_file import control_search,control_state,control_change_state,control_add,control_rm
-# from files_auto.cpu_stats import cpu_stats
 import time
 
 # #########################################################################
@@ -40,7 +39,6 @@ if reset_file == True:
     n_lines = 4
 # #########################################################################
 # #########################################################################
-
 
 
 #########################################################################
@@ -82,7 +80,7 @@ init_log()
 # #########################################################################
 # Argumentos
 # #########################################################################
-if len(sys.argv) < 2 or sys.argv[1] == '--help':
+if len(sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h':
     print("""
     Uso_1: auto_p2.py [opcion1] mv1 mv2 ... mvx
     Uso_2: auto_p2.py [Opcion2]
@@ -120,7 +118,6 @@ if not second_arg == 'monitor' and not second_arg == 'cpu_stats':
     if num_server <= 5:
         if len(sys.argv) > 2:
             while i < len(sys.argv) and sys.argv[i] != " ":
-                # logging.warning(sys.argv[i][1:].isdigit())
                 if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
                     print("")
                     logging.warning(f" Maquina {sys.argv[i]} no permitida\n")                
@@ -155,7 +152,6 @@ if second_arg == 'crear':
         call(["sudo","ifconfig","LAN1","10.11.1.3/24"])
         call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
 
-
     for nombre_mv in next_arg:
         if not control_search(nombre_mv):
             nombre = MV(nombre_mv)
@@ -168,13 +164,13 @@ if second_arg == 'crear':
             logging.warning(f"La maquina {nombre_mv} ya existe\n")
     
 elif second_arg == 'arrancar':
-
+    
     # Arrancar maquinas
     for nombre_mv in next_arg:
         if control_search(nombre_mv):
             if control_state(nombre_mv,"0"):    
                 nombre = MV(nombre_mv)
-                nombre.arrancar_mv() 
+                nombre.arrancar_mv(num_server) 
                 control_change_state(nombre_mv,"1")
             else:
                logging.warning(f"La maquina {nombre_mv} ya esta arrancada\n")
@@ -194,11 +190,10 @@ elif second_arg == 'parar':
         else:
             logging.warning(f"La maquina {nombre_mv} no existe\n")
     
-    time.sleep(6*len(next_arg)/6+1)
+    time.sleep(6*len(next_arg)/6+4) 
     
 
 elif second_arg == 'liberar':
-    
     for nombre_mv in next_arg:
         if control_search(nombre_mv):    
             nombre = MV(nombre_mv)
@@ -228,7 +223,6 @@ elif second_arg == 'monitor':
 
 elif second_arg == 'cpu_stats':
     run(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
-    # run(["python3", "files_auto/cpu_stats.py"])    
 
 elif second_arg == 'info':
     for nombre_mv in next_arg:

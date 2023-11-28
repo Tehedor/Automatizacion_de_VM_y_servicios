@@ -1,9 +1,7 @@
 import logging
-from subprocess import call,run, Popen
-from lxml import etree
+from subprocess import call, Popen
 import getpass
 from files_auto.config_files import editar_xml,crear_fiche,configurar_proxy
-from files_auto.control_file import control_state
 
 log = logging.getLogger('auto_p2')
 
@@ -79,20 +77,21 @@ class MV:
       call(["rm","files_auto/index.html"])
       call(["sudo", "virt-edit", "-a", ruta_maquina + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/\/usr\/sbin\/apachectl start\n/'])
 
-    # Router
-    if router:
+
+# ##########################################################################
+# ##########################################################################
+
+  def arrancar_mv (self,num_server):
+    # Routerk
+    if self.nombre == "lb":
+      ruta_maquina = "maquinas/" + self.nombre
       call(["cp","files_auto/haproxy","files_auto/haproxy.cfg"])
       configurar_proxy(num_server)
       call(["sudo", "virt-copy-in", "-a", ruta_maquina + ".qcow2", "files_auto/haproxy.cfg","/etc/haproxy/"])
       call(["rm","files_auto/haproxy.cfg"])
       call(["sudo", "virt-edit", "-a", ruta_maquina + ".qcow2", "/etc/rc.local", "-e",  r's/^\s*$/systemctl restart haproxy.service\n/'])
 
-# ##########################################################################
-# ##########################################################################
-
-  def arrancar_mv (self):
     log.debug("arrancar_mv " + self.nombre)
-
     # Arrancar MV
     call(["sudo","virsh","start",self.nombre])
 
@@ -107,8 +106,7 @@ class MV:
 
   def liberar_mv (self):
     log.debug("liberar_mv " + self.nombre)
-    if control_state(self.nombre,"1"):
-      call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
+    call(["sudo","virsh","destroy",self.nombre])  #Apagar la maquina de manera brusca
     call(["sudo","virsh","undefine",self.nombre]) #Eliminar la MV
     ruta_maquina = "maquinas/" + self.nombre
     call(["rm",ruta_maquina + ".xml"])

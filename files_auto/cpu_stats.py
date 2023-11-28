@@ -1,5 +1,5 @@
 from subprocess import call,check_output
-from control_file import control_search,control_state,control_change_state,control_add,control_rm
+from control_file import control_search,control_state
 import json
 
 with open('auto_p2.json', 'r') as f:
@@ -17,7 +17,7 @@ def cpu_stats():
         if control_state("c1","0"):
             state = "Parada"
         if control_state("c1","1"):
-            # check_output(["sudo","virsh","cpu-stats","c1","--total"])
+            # call(["sudo","virsh","cpu-stats","c1","--total"])
             print(check_output(["sudo","virsh","cpu-stats","c1","--total"]).decode())
             run = True
     if run == False:
