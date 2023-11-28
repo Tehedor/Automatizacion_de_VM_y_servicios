@@ -8,6 +8,18 @@ from files_auto.control_file import control_search,control_state,control_change_
 import time
 
 # #########################################################################
+# Comando de incio
+# #########################################################################
+if path.exists("maquinas") == False:
+    call(["mkdir","maquinas"])
+if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
+    call(["cp","/lab/cdps/pc1/cdps-vm-base-pc1.qcow2","./maquinas"])
+if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
+    call(["cp","/lab/cdps/pc1/plantilla-vm-pc1.xml","./maquinas"])
+# #########################################################################
+# #########################################################################
+
+# #########################################################################
 # Creación control_file
 # #########################################################################
 reset_file = False
