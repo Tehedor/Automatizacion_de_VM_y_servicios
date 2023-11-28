@@ -98,7 +98,7 @@ class MV:
   def mostrar_consola_mv (self):
     log.debug("mostrar_mv " + self.nombre)
     # Mostrar la consola sin que se dentenga el programa, mostrando de esta manera todas la consolas a la vez
-    call(["xterm","-e","sudo","virsh","console",self.nombre])
+    Popen(["xterm","-e","sudo","virsh","console",self.nombre])
   def parar_mv (self):
     log.debug("parar_mv " + self.nombre)
     call(["sudo","virsh","shutdown",self.nombre]) #Parar la maquina de manera suave
@@ -113,7 +113,7 @@ class MV:
     call(["rm",ruta_maquina + ".qcow2"])
 
   def monitorizar_mv (self):
-    Popen(["sudo","virsh","dominfo",self.nombre])
+    call(["sudo","virsh","dominfo",self.nombre])
     
 class Red:
   def __init__(self, nombre):
