@@ -84,21 +84,24 @@ init_log()
 # #########################################################################
 if len(sys.argv) < 2 or sys.argv[1] == '--help':
     print("""
-    Uso: auto_p2.py [opcion] mv1 mv2 ... mvx
-
-    Opcion:
+    Uso_1: auto_p2.py [Opcion1] mv1 mv2 ... mvx
+    Uso_2: auto_p2.py [Opcion2]
+    
+    Opcion1:
         crear: Crea una nueva máquina virtual o red.
         arrancar: Inicia una máquina virtual o red existente.
         parar: Detiene una máquina virtual o red existente.
         liberar: Libera una máquina virtual o red existente.
         consola: Muestra la consola de una máquina virtual existente.
-        monitor: Inicia el monitor de todas las máquinas virtuales.
         info: Muestr info de cada máquina virtual
-        cpu_stats: Muestra el estado de las cpu de cada máquina
-
     Argumento 2...N:
         mv1 mv2 ... mvx: Nombre de la máquina virtual o red a crear, arrancar, parar, liberar o mostrar la consola.
         Si no pones nada hará el proceso de operación con todas las máquinas virtuales especificadas en el fichero auto_p2.json
+    
+    Opcion2:
+        monitor: Inicia el monitor de todas las máquinas virtuales.
+        cpu_stats: Muestra el estado de las cpu de todas las máquinas.
+
     
     """)
     sys.exit(0)
