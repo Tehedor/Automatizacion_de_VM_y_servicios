@@ -109,30 +109,36 @@ if len(sys.argv) < 2 or sys.argv[1] == '--help':
 
 
 second_arg = sys.argv[1]
+if not second_arg == 'monitor' and not second_arg == 'cpu_stats': 
+    next_arg = []
 
-next_arg = []
+    all_vm = ["c1","lb"]
+    for i in range(num_server):
+        all_vm.append("s" + str(i+1)) 
 
-all_vm = ["c1","lb"]
-for i in range(num_server):
-    all_vm.append("s" + str(i+1)) 
-
-i=2
-if num_server <= 5:
-    if len(sys.argv) > 2:
-        while i < len(sys.argv) and sys.argv[i] != " ":
-            # logging.warning(sys.argv[i][1:].isdigit())
-            if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
-                print("")
-                logging.warning(f" Maquina {sys.argv[i]} no permitida\n")                
-            else:
-                next_arg.append(sys.argv[i])
-            i = i + 1
+    i=2
+    if num_server <= 5:
+        if len(sys.argv) > 2:
+            while i < len(sys.argv) and sys.argv[i] != " ":
+                # logging.warning(sys.argv[i][1:].isdigit())
+                if sys.argv[i] != "lb" and sys.argv[i] != "c1" and not(sys.argv[i].startswith("s") and sys.argv[i][1:].isdigit() and int(sys.argv[i][1:]) <= num_server):
+                    print("")
+                    logging.warning(f" Maquina {sys.argv[i]} no permitida\n")                
+                else:
+                    next_arg.append(sys.argv[i])
+                i = i + 1
+        else:
+            next_arg = all_vm
     else:
-        next_arg = all_vm
+        print("")
+        logging.error("No se puede crear mas de 5 servidores")
+        print("")
 else:
-    print("")
-    logging.error("No se puede crear mas de 5 servidores")
-    print("")
+    if len(sys.argv) > 2:
+        print("")
+        logging.warning(f"No se pueden poner argumento para " + second_arg)
+        print("")
+        sys.exit(1)
 # #########################################################################
 # Aplicacion
 # #########################################################################
@@ -188,7 +194,7 @@ elif second_arg == 'parar':
         else:
             logging.warning(f"La maquina {nombre_mv} no existe\n")
     
-    time.sleep(5)
+    time.sleep(6*len(next_arg)/6+1)
     
 
 elif second_arg == 'liberar':
