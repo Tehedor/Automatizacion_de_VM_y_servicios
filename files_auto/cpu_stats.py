@@ -9,7 +9,6 @@ with open('auto_p2.json', 'r') as f:
 num_server = data['num_server']
 
 def cpu_stats():
-    # print("########    Cliente    ########")
     print("####  c1  ####")
     state = "NO EXISTE"
     run = False
@@ -25,7 +24,6 @@ def cpu_stats():
     print("")
     
     # Router
-    # print("########     Router    ########")
     print("####  lb  ####")
     state = "NO EXISTE"
     run = False
