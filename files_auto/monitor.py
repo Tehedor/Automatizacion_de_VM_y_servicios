@@ -1,5 +1,4 @@
-from subprocess import call
-from control_file import control_search,control_state,control_change_state,control_add,control_rm
+from control_file import control_search,control_state
 import json
 
 with open('auto_p2.json', 'r') as f:
