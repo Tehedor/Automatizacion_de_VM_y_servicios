@@ -213,10 +213,10 @@ elif second_arg == 'consola':
         nombre = MV(nombre_mv)
         nombre.mostrar_consola_mv()
 elif second_arg == 'monitor':
-    run(["watch", "-n", "0.25", "python3", "files_atuo/monitor.py"])
+    run(["watch", "-n", "0.25", "python3", "files_auto/monitor.py"])
 
 elif second_arg == 'cpu_stats':
-    run(["watch", "-n", "0.25", "python3", "files_atuo/cpu_stats.py"])    
+    run(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
 
 elif second_arg == 'info':
     for nombre_mv in next_arg:
