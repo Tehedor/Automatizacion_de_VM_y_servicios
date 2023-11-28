@@ -1,5 +1,5 @@
 *.qcow2
-/maquinas/*.qcow2
+/maquinas
 *.xml
 *.vscode
 control_file
