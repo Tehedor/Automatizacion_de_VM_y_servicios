@@ -9,12 +9,9 @@ import time
 # #########################################################################
 # Comando de incio
 # #########################################################################
-if path.exists("maquinas") == False:
-    call(["mkdir","maquinas"])
-if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
-    call(["cp","/lab/cdps/pc1/cdps-vm-base-pc1.qcow2","./maquinas"])
-if path.exists("maquinas/plantilla-vm-pc1.xml") == False:
-    call(["cp","/lab/cdps/pc1/plantilla-vm-pc1.xml","./maquinas"])
+work = True
+if not path.exists("maquinas") or not path.exists("maquinas/cdps-vm-base-pc1.qcow2") or not path.exists("maquinas/plantilla-vm-pc1.xml"):
+    work = False
 # #########################################################################
 # #########################################################################
 
@@ -139,6 +136,30 @@ else:
 # #########################################################################
 # Aplicacion
 # #########################################################################
+if second_arg == 'iniciar':
+    if work:
+        logging.info(" Directorio maquinas y files plantilla-vm-pc1.xml & cdps-vm-base-pc1.qcow2 ya estan disponibles\n")
+    
+    if path.exists("maquinas") == False:
+        call(["mkdir","maquinas"])
+        logging.info(" Directorio maquinas creado\n")
+    if path.exists("maquinas/cdps-vm-base-pc1.qcow2") == False:
+        call(["cp","/lab/cdps/pc1/cdps-vm-base-pc1.qcow2","./maquinas"])
+        logging.info(" Imagen cdps-vm-base-pc1 copiada\n")
+    if path.exists("maquinas/plantilla-vm-pc1.xml") == False:
+        call(["cp","/lab/cdps/pc1/plantilla-vm-pc1.xml","./maquinas"])
+        logging.info(" Plantilla plantilla-vm-pc1.xml copiada\n")
+    sys.exit(0)
+
+if not work:
+    if not path.exists("maquinas"):
+        logging.warning(" Directorio maquinas no existe\n")
+    if not path.exists("maquinas/cdps-vm-base-pc1.qcow2"):
+        logging.warning(" Imagen cdps-vm-base-pc1 no existe\n")
+    if not path.exists("maquinas/plantilla-vm-pc1.xml"):
+        logging.warning(" Plantilla plantilla-vm-pc1.xml no existe\n")
+    sys.exit(1)
+
 
 if second_arg == 'crear':
     imagen = "cdps-vm-base-pc1.qcow2"   
@@ -151,6 +172,7 @@ if second_arg == 'crear':
         control_add("LAN")
         call(["sudo","ifconfig","LAN1","10.11.1.3/24"])
         call(["sudo","ip","route","add","10.11.0.0/16","via","10.11.1.1"])
+        logging.info(" La red LAN ha sido creada y host añadido a la LAN1\n")
 
     for nombre_mv in next_arg:
         if not control_search(nombre_mv):
@@ -160,8 +182,9 @@ if second_arg == 'crear':
                 router = True
             nombre.crear_mv(imagen, router,num_server)
             control_add(nombre_mv)
+            logging.info(f" La maquina {nombre_mv} ha sido creada\n")
         else:
-            logging.warning(f"La maquina {nombre_mv} ya existe\n")
+            logging.warning(f" La maquina {nombre_mv} ya existe\n")
     
 elif second_arg == 'arrancar':
     
@@ -172,10 +195,11 @@ elif second_arg == 'arrancar':
                 nombre = MV(nombre_mv)
                 nombre.arrancar_mv(num_server) 
                 control_change_state(nombre_mv,"1")
+                logging.info(f" La maquina {nombre_mv} ha sido arrancada\n")
             else:
-               logging.warning(f"La maquina {nombre_mv} ya esta arrancada\n")
+               logging.warning(f" La maquina {nombre_mv} ya esta arrancada\n")
         else:
-            logging.warning(f"La maquina {nombre_mv} no existe\n")
+            logging.warning(f" La maquina {nombre_mv} no existe\n")
 
 
 elif second_arg == 'parar':
@@ -185,10 +209,11 @@ elif second_arg == 'parar':
                 nombre = MV(nombre_mv)
                 nombre.parar_mv()
                 control_change_state(nombre_mv,"0")
+                logging.info(f" La maquina {nombre_mv} ha sido parada\n")
             else:
-                logging.warning(f"La maquina {nombre_mv} ya esta parada\n")
+                logging.warning(f" La maquina {nombre_mv} ya esta parada\n")
         else:
-            logging.warning(f"La maquina {nombre_mv} no existe\n")
+            logging.warning(f" La maquina {nombre_mv} no existe\n")
     
     time.sleep(6*len(next_arg)/6+4) 
     
@@ -199,8 +224,9 @@ elif second_arg == 'liberar':
             nombre = MV(nombre_mv)
             nombre.liberar_mv()
             control_rm(nombre_mv)
+            logging.info(f" La maquina {nombre_mv} ha sido liberada\n")
         else:
-            logging.warning(f"La maquina {nombre_mv} no existe\n")
+            logging.warning(f" La maquina {nombre_mv} no existe\n")
    
     # Liberar redes
     with open ('files_auto/control_file','r') as archivo:
@@ -213,6 +239,7 @@ elif second_arg == 'liberar':
             if1.liberar_red()
             if2.liberar_red()
             control_rm("LAN")
+            logging.info(" La red LAN ha sido liberada\n")
 
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
@@ -231,8 +258,8 @@ elif second_arg == 'info':
                 nombre = MV(nombre_mv)
                 nombre.monitorizar_mv()
             else:
-                logging.warning(f"La maquina {nombre_mv} no esta arrancada\n")
+                logging.warning(f" La maquina {nombre_mv} no esta arrancada\n")
         else:
             logging.warning(f" La maquina {nombre_mv} no existe\n")
 else:
-    logging.warning(f"Argumento desconocido {second_arg}")
+    logging.warning(f" Argumento desconocido {second_arg}")

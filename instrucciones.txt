@@ -2,8 +2,8 @@ Debes colocar tanto el directorio 'files_auto' como los archivos 'auto_p2.json' 
 
   El directorio del "nombre de usuario" debe tener el mismo nombre que aparece en la consola al escribir whoami.
 
-Una vez que hayamos completado todos estos pasos, ejecutaremos 'auto_p2.py' con 'python3 auto_p2.py crear' y se crearán todas las máquinas de la 
-práctica. No es necesario copiar los archivos '.qcow2' y '.xml' en una carpeta llamada 'maquinas', ya que esta se creará automáticamente. 
-Ambos archivos se copiarán dentro de ella al iniciar el script, siempre y cuando tengamos acceso al directorio del laboratorio en /lab/cdps/pc1.
+Una vez que hayamos completado todo estos pasos deberemos hacer un directorio maquinas el cual debe contener los files 'cdps-vm-base-pc1.qcow2' y 
+'plantilla-vm-pc1.xml'. Esto lo podremos hacer de manera manual como piden en la práctica o a través del comando "python3 auto_p2 iniciar", este 
+comando lo podemos utilizar siempre y cuando tengamos acceso al directorio del laboratorio en /lab/cdps/pc1.
 
-Wscriba 'python3 auto_p2.py --help' para ver todas las funcionalidades."
+Escriba 'python3 auto_p2.py --help' para ver todas las funcionalidades."
