@@ -1,0 +1,9 @@
+Debes colocar tanto el directorio 'files_auto' como los archivos 'auto_p2.json' y 'auto_p2.py' en el directorio /mnt/tmp/(nombre de usuario)/*
+
+  El directorio del "nombre de usuario" debe tener el mismo nombre que aparece en la consola al escribir whoami.
+
+Una vez que hayamos completado todos estos pasos, ejecutaremos 'auto_p2.py' con 'python3 auto_p2.py crear' y se crearán todas las máquinas de la 
+práctica. No es necesario copiar los archivos '.qcow2' y '.xml' en una carpeta llamada 'maquinas', ya que esta carpeta se creará automáticamente,
+y ambos archivos se copiarán dentro de ella al arrancar el script, siempre y cuando tengamos acceso al directorio del laboratorio en /lab/cdps/pc1.
+
+Wscriba 'python3 auto_p2.py --help' para ver todas las funcionalidades."
