@@ -7,7 +7,7 @@ from files_auto.control_file import control_search,control_state,control_change_
 import time
 
 # #########################################################################
-# Comando de incio
+# Verificar si existen los archivos necesarios
 # #########################################################################
 work = True
 if not path.exists("maquinas") or not path.exists("maquinas/cdps-vm-base-pc1.qcow2") or not path.exists("maquinas/plantilla-vm-pc1.xml"):
@@ -89,14 +89,17 @@ if len(sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h':
         liberar: Libera una máquina virtual o red existente.
         consola: Muestra la consola de una máquina virtual existente.
         info: Muestr info de cada máquina virtual
+        forceReiniciar: Reinicia una máquina virtual existente. Liberandola, creandola y arrancandola.
         
         Argumento 2...N:
             mv1 mv2 ... mvx: Nombre de la máquina virtual o red a crear, arrancar, parar, liberar o mostrar la consola.
             Si no pones nada hará el proceso de operación con todas las máquinas virtuales especificadas en el fichero auto_p2.json
     
     opcion2:
+        iniciar: Crea el directorio maquinas y copia los archivos necesarios, si estos no estan disponibles.
         monitor: Inicia el monitor de todas las máquinas virtuales.
         cpu_stats: Muestra el estado de las cpu de todas las máquinas.
+        gestion: Abre la interfaz de gestión de HAProxy.
 
     
     """)
@@ -104,7 +107,7 @@ if len(sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h':
 
 
 second_arg = sys.argv[1]
-if not second_arg == 'monitor' and not second_arg == 'cpu_stats': 
+if not second_arg == 'monitor' and not second_arg == 'cpu_stats' and not second_arg == 'gestion' and not second_arg == 'iniciar': 
     next_arg = []
 
     all_vm = ["c1","lb"]
@@ -123,6 +126,13 @@ if not second_arg == 'monitor' and not second_arg == 'cpu_stats':
                 i = i + 1
         else:
             next_arg = all_vm
+        
+        long_ini = len(next_arg)
+        next_arg = list(set(next_arg)) # Convierte en un conjunto para eliminar duplicados y luego lo vuelve a convertir en lista
+    
+        if len(next_arg) != long_ini:
+            logging.info("Se han eliminado argumentos duplicados\n")
+
     else:
         print("")
         logging.error("No se puede crear mas de 5 servidores")
@@ -217,7 +227,17 @@ elif second_arg == 'parar':
     
     time.sleep(6*len(next_arg)/6+4) 
     
-
+elif second_arg == 'forceReiniciar':
+    for nombre_mv in next_arg:
+        if control_search(nombre_mv):
+                nombre = MV(nombre_mv)
+                call(["python3","auto_p2.py","liberar",nombre_mv])
+                call(["python3","auto_p2.py","crear",nombre_mv])
+                call(["python3","auto_p2.py","arrancar",nombre_mv])
+        else:
+            logging.warning(f" La maquina {nombre_mv} no existe\n")
+    
+  
 elif second_arg == 'liberar':
     for nombre_mv in next_arg:
         if control_search(nombre_mv):    
@@ -251,6 +271,8 @@ elif second_arg == 'monitor':
 elif second_arg == 'cpu_stats':
     call(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
 
+elif second_arg == 'gestion':
+    call(["firefox", "http://10.11.1.1:8080/stats"])
 elif second_arg == 'info':
     for nombre_mv in next_arg:
         if control_search(nombre_mv):

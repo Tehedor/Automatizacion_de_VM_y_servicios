@@ -80,7 +80,14 @@ def configurar_proxy(num_server):
             archivo.write("\tbalance roundrobin\n")
             for i in range(num_server):
                archivo.write(f"\tserver s{i+1} 10.11.2.3{i+1}:80 check\n")
-
+        
+        # Interfaz de gestion
+            archivo.write("\nlisten stats\n")
+            archivo.write("\tbind *:8080\n")
+            archivo.write("\tmode http\n")
+            archivo.write("\tstats enable\n")
+            archivo.write("\tstats uri /stats\n")
+            archivo.write("\tstats refresh 1s\n")
 
 # ##########################################################################
 # Configuración del XML
