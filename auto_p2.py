@@ -263,8 +263,16 @@ elif second_arg == 'liberar':
 
 elif second_arg == 'consola':
     for nombre_mv in next_arg:
-        nombre = MV(nombre_mv)
-        nombre.mostrar_consola_mv()
+        if control_search(nombre_mv):  
+            if control_state(nombre_mv,"1"):
+                nombre = MV(nombre_mv)
+                nombre.mostrar_consola_mv()
+                logging.info(f" Abriendo consola de la máquina {nombre_mv}\n")
+            else:
+            logging.warning(f" La maquina {nombre_mv} no está arrancada\n")   
+        else:
+            logging.warning(f" La maquina {nombre_mv} no existe\n")       
+        
 elif second_arg == 'monitor':
     call(["watch", "-n", "0.25", "python3", "files_auto/monitor.py"])
 
