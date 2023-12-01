@@ -280,7 +280,13 @@ elif second_arg == 'cpu_stats':
     call(["watch", "-n", "0.25", "python3", "files_auto/cpu_stats.py"])    
 
 elif second_arg == 'gestion':
-    call(["firefox", "http://10.11.1.1:8080/stats"])
+    if control_search("lb"):
+        if control_state("lb","1"):
+            call(["firefox", "http://10.11.1.1:8080/stats"])
+        else:
+            logging.warning(f" Proxy (lb) no arrancado\n")
+    else:
+        logging.warning(f" Proxy (lb) no existe\n")
 elif second_arg == 'info':
     for nombre_mv in next_arg:
         if control_search(nombre_mv):
