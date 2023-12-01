@@ -269,7 +269,7 @@ elif second_arg == 'consola':
                 nombre.mostrar_consola_mv()
                 logging.info(f" Abriendo consola de la máquina {nombre_mv}\n")
             else:
-            logging.warning(f" La maquina {nombre_mv} no está arrancada\n")   
+                logging.warning(f" La maquina {nombre_mv} no está arrancada\n")   
         else:
             logging.warning(f" La maquina {nombre_mv} no existe\n")       
         
